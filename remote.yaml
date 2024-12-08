@@ -118,6 +118,82 @@ button:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8027
 
+###############
+# HDMI Switch #
+###############
+
+  - platform: template
+    name: HDMI Switch Power On
+    icon: "mdi:power-on"
+    on_press:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x805C
+
+  - platform: template
+    name: HDMI Switch Power Off
+    icon: "mdi:power-off"
+    on_press:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x801F
+
+  - platform: template
+    name: HDMI Switch Device 1
+    icon: "mdi:numeric-1"
+    on_press:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x801B
+
+  - platform: template
+    name: HDMI Switch Device 2
+    icon: "mdi:numeric-2"
+    on_press:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x801E
+
+  - platform: template
+    name: HDMI Switch Device 3
+    icon: "mdi:numeric-3"
+    on_press:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x800D
+
+  - platform: template
+    name: HDMI Switch Device 4
+    icon: "mdi:numeric-4"
+    on_press:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8012
+
+  - platform: template
+    name: HDMI Switch Device 5
+    icon: "mdi:numeric-5"
+    on_press:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8010
+
+  - platform: template
+    name: HDMI Switch Device Up
+    icon: "mdi:arrow-up-box"
+    on_press:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x800C
+
+  - platform: template
+    name: HDMI Switch Device Down
+    icon: "mdi:arrow-down-box"
+    on_press:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8005
+
 ##############
 # Connection #
 ##############
