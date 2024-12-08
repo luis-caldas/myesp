@@ -15,6 +15,7 @@ esp32:
 ##########
 
 <<: !include extras.yaml
+<<: !include remote-extras.yaml
 
 #############
 # Receivers #

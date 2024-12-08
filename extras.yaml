@@ -17,3 +17,12 @@ sensor:
     filters:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: "%"
+
+binary_sensor:
+  - platform: status
+    name: Status
+
+switch:
+  - platform: restart
+    name: Restart
+    id: reboot  # Enable reboot if necessary
