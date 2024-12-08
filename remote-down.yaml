@@ -182,25 +182,25 @@ button:
 
   - platform: template
     name: Roku Up
-    icon: "mdi:arrow-up-box"
+    icon: "mdi:menu-up"
     on_press:
       - script.execute: roku_up
 
   - platform: template
     name: Roku Left
-    icon: "mdi:arrow-left-box"
+    icon: "mdi:menu-left"
     on_press:
       - script.execute: roku_left
 
   - platform: template
     name: Roku Down
-    icon: "mdi:arrow-down-box"
+    icon: "mdi:menu-down"
     on_press:
       - script.execute: roku_down
 
   - platform: template
     name: Roku Right
-    icon: "mdi:arrow-right-box"
+    icon: "mdi:menu-right"
     on_press:
       - script.execute: roku_right
 
