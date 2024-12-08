@@ -1,0 +1,253 @@
+#########
+# Setup #
+#########
+
+esphome:
+  name: remote-box-up
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+#############
+# Receivers #
+#############
+
+remote_receiver:
+  - id: receiver_ir
+    pin:
+      number: GPIO23
+      inverted: true
+    dump: all
+
+  - id: receiver_rf
+    pin: GPIO25
+    dump: all
+    # Settings to optimize recognition of RF devices
+    tolerance: 50%
+    filter: 250us
+    idle: 4ms
+
+remote_transmitter:
+  - id: transmitter_ir
+    pin: GPIO2
+    # Infrared remotes use a 50% carrier signal
+    carrier_duty_percent: 50%
+
+  - id: transmitter_rf
+    pin: GPIO22
+    # RF uses a 100% carrier signal
+    carrier_duty_percent: 100%
+
+###########
+# Actions #
+###########
+
+<<: !include remote-codes.yaml
+
+###########
+# Roku IR #
+###########
+
+button:
+
+  - platform: template
+    name: Roku Home
+    icon: "mdi:home"
+    on_press:
+      - script.execute: roku_home
+
+  - platform: template
+    name: Roku Back
+    icon: "mdi:keyboard-backspace"
+    on_press:
+      - script.execute: roku_back
+
+  - platform: template
+    name: Roku Up
+    icon: "mdi:menu-up"
+    on_press:
+      - script.execute: roku_up
+
+  - platform: template
+    name: Roku Left
+    icon: "mdi:menu-left"
+    on_press:
+      - script.execute: roku_left
+
+  - platform: template
+    name: Roku Down
+    icon: "mdi:menu-down"
+    on_press:
+      - script.execute: roku_down
+
+  - platform: template
+    name: Roku Right
+    icon: "mdi:menu-right"
+    on_press:
+      - script.execute: roku_right
+
+  - platform: template
+    name: Roku Select
+    icon: "mdi:cursor-default-click"
+    on_press:
+      - script.execute: roku_select
+
+  - platform: template
+    name: Roku Replay
+    icon: "mdi:replay"
+    on_press:
+      - script.execute: roku_replay
+
+  - platform: template
+    name: Roku Options
+    icon: "mdi:dots-horizontal-circle"
+    on_press:
+      - script.execute: roku_options
+
+  - platform: template
+    name: Roku Previous
+    icon: "mdi:rewind"
+    on_press:
+      - script.execute: roku_previous
+
+  - platform: template
+    name: Roku Next
+    icon: "mdi:fast-forward"
+    on_press:
+      - script.execute: roku_next
+
+  - platform: template
+    name: Roku Play Pause
+    icon: "mdi:play-pause"
+    on_press:
+      - script.execute: roku_play_pause
+
+#############
+# Projector #
+#############
+
+  - platform: template
+    name: Projector Power
+    icon: "mdi:power"
+    on_press:
+      - script.execute: projector_power
+
+  - platform: template
+    name: Projector Source
+    icon: "mdi:video-input-hdmi"
+    on_press:
+      - script.execute: projector_source
+
+  - platform: template
+    name: Projector Home
+    icon: "mdi:home"
+    on_press:
+      - script.execute: projector_home
+
+  - platform: template
+    name: Projector Up
+    icon: "mdi:menu-up"
+    on_press:
+      - script.execute: projector_up
+
+  - platform: template
+    name: Projector Left
+    icon: "mdi:menu-left"
+    on_press:
+      - script.execute: projector_left
+
+  - platform: template
+    name: Projector Down
+    icon: "mdi:menu-down"
+    on_press:
+      - script.execute: projector_down
+
+  - platform: template
+    name: Projector Right
+    icon: "mdi:menu-right"
+    on_press:
+      - script.execute: projector_right
+
+  - platform: template
+    name: Projector Select
+    icon: "mdi:cursor-default-click"
+    on_press:
+      - script.execute: projector_select
+
+  - platform: template
+    name: Projector Options
+    icon: "mdi:dots-horizontal-circle"
+    on_press:
+      - script.execute: projector_options
+
+  - platform: template
+    name: Projector Back
+    icon: "mdi:keyboard-backspace"
+    on_press:
+      - script.execute: projector_back
+
+  - platform: template
+    name: Projector Auto Focus
+    icon: "mdi:focus-auto"
+    on_press:
+      - script.execute: projector_auto_focus
+
+  - platform: template
+    name: Projector Mute
+    icon: "mdi:volume-mute"
+    on_press:
+      - script.execute: projector_mute
+
+  - platform: template
+    name: Projector Volume Up
+    icon: "mdi:volume-plus"
+    on_press:
+      - script.execute: projector_volume_up
+
+  - platform: template
+    name: Projector Volume Down
+    icon: "mdi:volume-minus"
+    on_press:
+      - script.execute: projector_volume_down
+
+  - platform: template
+    name: Projector Focus Up
+    icon: "mdi:image-filter-center-focus-strong"
+    on_press:
+      - script.execute: projector_focus_up
+
+  - platform: template
+    name: Projector Focus Down
+    icon: "mdi:image-filter-center-focus-weak"
+    on_press:
+      - script.execute: projector_focus_down
+
+
+##############
+# Connection #
+##############
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: !secret device_password
+
+ota:
+  - platform: esphome
+    password: !secret device_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Remote Box Up"
+    password: !secret ap_password
+
+captive_portal:
+

@@ -292,3 +292,101 @@ script:
           transmitter_id: transmitter_ir
           data: 0xE0E058A7
           nbits: 32
+
+# ### Wimius Projector ### #
+
+  - id: projector_power
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x100B
+
+  - id: projector_source
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x100C
+
+  - id: projector_home
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x101A
+
+  - id: projector_up
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x1050
+
+  - id: projector_left
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x1051
+
+  - id: projector_down
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x1053
+
+  - id: projector_right
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x1052
+
+  - id: projector_select
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x101C
+
+  - id: projector_options
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x1017
+
+  - id: projector_back
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x1015
+
+  - id: projector_auto_focus
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x10B6
+
+  - id: projector_mute
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x1014
+
+  - id: projector_volume_up
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x1048
+
+  - id: projector_volume_down
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x1049
+
+  - id: projector_focus_up
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x1056
+
+  - id: projector_focus_down
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x1057
