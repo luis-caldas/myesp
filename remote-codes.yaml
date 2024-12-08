@@ -139,7 +139,7 @@ script:
     then:
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
-          data: 0x07035FA0
+          data: 0x574355AA
           nbits: 32
   - id: roku_replay
     then:
