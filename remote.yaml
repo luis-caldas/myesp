@@ -40,6 +40,210 @@ remote_transmitter:
     # RF uses a 100% carrier signal
     carrier_duty_percent: 100%
 
+###########
+# Actions #
+###########
+
+script:
+
+# ### Soundbar ### #
+
+  - id: soundbar_power
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8001
+
+  - id: soundbar_input
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8002
+
+  - id: soundbar_mute
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8033
+
+  - id: soundbar_volume_up
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8003
+
+  - id: soundbar_volume_down
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8008
+
+  - id: soundbar_bass_up
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8004
+
+  - id: soundbar_bass_down
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8026
+
+  - id: soundbar_trebble_up
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8025
+
+  - id: soundbar_trebble_down
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8027
+
+# ### HDMI Switch ### #
+
+  - id: hdmi_switch_power_on
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x805C
+
+  - id: hdmi_switch_power_off
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x801F
+
+  - id: hdmi_switch_device_1
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x801B
+
+  - id: hdmi_switch_device_2
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x801E
+
+  - id: hdmi_switch_device_3
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x800D
+
+  - id: hdmi_switch_device_4
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8012
+
+  - id: hdmi_switch_device_5
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8010
+
+  - id: hdmi_switch_device_up
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x800C
+
+  - id: hdmi_switch_device_down
+    then:
+      - remote_transmitter.transmit_pioneer:
+          transmitter_id: transmitter_ir
+          rc_code_1: 0x8005
+
+# ### Roku ### #
+
+  - id: roku_home
+    then:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x5743C13E
+          nbits: 32
+
+  - id: roku_back
+    then:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x57436798
+          nbits: 32
+
+  - id: roku_up
+    then:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x57439966
+          nbits: 32
+
+  - id: roku_left
+    then:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x57437986
+          nbits: 32
+
+  - id: roku_down
+    then:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x5743CD32
+          nbits: 32
+
+  - id: roku_right
+    then:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x5743B54A
+          nbits: 32
+
+  - id: roku_select
+    then:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x07035FA0
+          nbits: 32
+
+  - id: roku_replay
+    then:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x57431FE0
+          nbits: 32
+
+  - id: roku_options
+    then:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x57438778
+          nbits: 32
+
+  - id: roku_previous
+    then:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x57432DD2
+          nbits: 32
+
+  - id: roku_next
+    then:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x5743AB54
+          nbits: 32
+
+  - id: roku_play_pause
+    then:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x574333CC
+          nbits: 32
+
 ############
 # Soundbar #
 ############
@@ -50,73 +254,55 @@ button:
     name: Soundbar Power
     icon: "mdi:power"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x8001
+      - script.execute: soundbar_power
 
   - platform: template
     name: Soundbar Input
     icon: "mdi:video-input-hdmi"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x8002
+      - script.execute: soundbar_input
 
   - platform: template
     name: Soundbar Mute
     icon: "mdi:volume-mute"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x8033
+      - script.execute: soundbar_mute
 
   - platform: template
     name: Soundbar Volume Up
     icon: "mdi:volume-plus"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x8003
+      - script.execute: soundbar_volume_up
 
   - platform: template
     name: Soundbar Volume Down
     icon: "mdi:volume-minus"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x8008
+      - script.execute: soundbar_volume_down
 
   - platform: template
     name: Soundbar Bass Up
     icon: "mdi:chevron-up-box"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x8004
+      - script.execute: soundbar_bass_up
 
   - platform: template
     name: Soundbar Bass Down
     icon: "mdi:chevron-down-box"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x8026
+      - script.execute: soundbar_bass_down
 
   - platform: template
     name: Soundbar Trebble Up
     icon: "mdi:chevron-up-box-outline"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x8025
+      - script.execute: soundbar_trebble_up
 
   - platform: template
     name: Soundbar Trebble Down
     icon: "mdi:chevron-down-box-outline"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x8027
+      - script.execute: soundbar_trebble_down
 
 ###############
 # HDMI Switch #
@@ -126,73 +312,55 @@ button:
     name: HDMI Switch Power On
     icon: "mdi:power-on"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x805C
+      - script.execute: hdmi_switch_power_on
 
   - platform: template
     name: HDMI Switch Power Off
     icon: "mdi:power-off"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x801F
+      - script.execute: hdmi_switch_power_off
 
   - platform: template
-    name: HDMI Switch Device 1
+    name: HDMI Switch Device_1
     icon: "mdi:numeric-1"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x801B
+      - script.execute: hdmi_switch_device_1
 
   - platform: template
-    name: HDMI Switch Device 2
+    name: HDMI Switch Device_2
     icon: "mdi:numeric-2"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x801E
+      - script.execute: hdmi_switch_device_2
 
   - platform: template
-    name: HDMI Switch Device 3
+    name: HDMI Switch Device_3
     icon: "mdi:numeric-3"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x800D
+      - script.execute: hdmi_switch_device_3
 
   - platform: template
-    name: HDMI Switch Device 4
+    name: HDMI Switch Device_4
     icon: "mdi:numeric-4"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x8012
+      - script.execute: hdmi_switch_device_4
 
   - platform: template
-    name: HDMI Switch Device 5
+    name: HDMI Switch Device_5
     icon: "mdi:numeric-5"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x8010
+      - script.execute: hdmi_switch_device_5
 
   - platform: template
     name: HDMI Switch Device Up
     icon: "mdi:arrow-up-box"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x800C
+      - script.execute: hdmi_switch_device_up
 
   - platform: template
     name: HDMI Switch Device Down
     icon: "mdi:arrow-down-box"
     on_press:
-      - remote_transmitter.transmit_pioneer:
-          transmitter_id: transmitter_ir
-          rc_code_1: 0x8005
+      - script.execute: hdmi_switch_device_down
 
 ###########
 # Roku IR #
@@ -202,109 +370,73 @@ button:
     name: Roku Home
     icon: "mdi:home"
     on_press:
-      - remote_transmitter.transmit_lg:
-          transmitter_id: transmitter_ir
-          data: 0x5743C13E
-          nbits: 32
+      - script.execute: roku_home
 
   - platform: template
     name: Roku Back
     icon: "mdi:keyboard-backspace"
     on_press:
-      - remote_transmitter.transmit_lg:
-          transmitter_id: transmitter_ir
-          data: 0x57436798
-          nbits: 32
+      - script.execute: roku_back
 
   - platform: template
     name: Roku Up
     icon: "mdi:arrow-up-box"
     on_press:
-      - remote_transmitter.transmit_lg:
-          transmitter_id: transmitter_ir
-          data: 0x57439966
-          nbits: 32
+      - script.execute: roku_up
 
   - platform: template
     name: Roku Left
     icon: "mdi:arrow-left-box"
     on_press:
-      - remote_transmitter.transmit_lg:
-          transmitter_id: transmitter_ir
-          data: 0x57437986
-          nbits: 32
+      - script.execute: roku_left
 
   - platform: template
     name: Roku Down
     icon: "mdi:arrow-down-box"
     on_press:
-      - remote_transmitter.transmit_lg:
-          transmitter_id: transmitter_ir
-          data: 0x5743CD32
-          nbits: 32
+      - script.execute: roku_down
 
   - platform: template
     name: Roku Right
     icon: "mdi:arrow-right-box"
     on_press:
-      - remote_transmitter.transmit_lg:
-          transmitter_id: transmitter_ir
-          data: 0x5743B54A
-          nbits: 32
+      - script.execute: roku_right
 
   - platform: template
     name: Roku Select
     icon: "mdi:cursor-default-click"
     on_press:
-      - remote_transmitter.transmit_lg:
-          transmitter_id: transmitter_ir
-          data: 0x07035FA0
-          nbits: 32
+      - script.execute: roku_select
 
   - platform: template
     name: Roku Replay
     icon: "mdi:replay"
     on_press:
-      - remote_transmitter.transmit_lg:
-          transmitter_id: transmitter_ir
-          data: 0x57431FE0
-          nbits: 32
+      - script.execute: roku_replay
 
   - platform: template
     name: Roku Options
     icon: "mdi:dots-horizontal-circle"
     on_press:
-      - remote_transmitter.transmit_lg:
-          transmitter_id: transmitter_ir
-          data: 0x57438778
-          nbits: 32
+      - script.execute: roku_options
 
   - platform: template
     name: Roku Previous
     icon: "mdi:rewind"
     on_press:
-      - remote_transmitter.transmit_lg:
-          transmitter_id: transmitter_ir
-          data: 0x57432DD2
-          nbits: 32
+      - script.execute: roku_previous
 
   - platform: template
     name: Roku Next
     icon: "mdi:fast-forward"
     on_press:
-      - remote_transmitter.transmit_lg:
-          transmitter_id: transmitter_ir
-          data: 0x5743AB54
-          nbits: 32
+      - script.execute: roku_next
 
   - platform: template
     name: Roku Play Pause
     icon: "mdi:play-pause"
     on_press:
-      - remote_transmitter.transmit_lg:
-          transmitter_id: transmitter_ir
-          data: 0x574333CC
-          nbits: 32
+      - script.execute: roku_play_pause
 
 ##############
 # Connection #
