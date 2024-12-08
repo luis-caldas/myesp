@@ -241,6 +241,112 @@ button:
       - script.execute: roku_play_pause
 
 ##############
+# Samsung TV #
+##############
+
+  - platform: template
+    name: Samsung Power
+    icon: "mdi:power"
+    on_press:
+      - script.execute: samsung_power
+
+  - platform: template
+    name: Samsung Source
+    icon: "mdi:video-input-hdmi"
+    on_press:
+      - script.execute: samsung_source
+
+  - platform: template
+    name: Samsung Mute
+    icon: "mdi:volume-mute"
+    on_press:
+      - script.execute: samsung_mute
+
+  - platform: template
+    name: Samsung Volume Up
+    icon: "mdi:volume-plus"
+    on_press:
+      - script.execute: samsung_volume_up
+
+  - platform: template
+    name: Samsung Volume Down
+    icon: "mdi:volume-minus"
+    on_press:
+      - script.execute: samsung_volume_down
+
+  - platform: template
+    name: Samsung Channel List
+    icon: "mdi:list-box"
+    on_press:
+      - script.execute: samsung_channel_list
+
+  - platform: template
+    name: Samsung Channel Up
+    icon: "mdi:chevron-up-box"
+    on_press:
+      - script.execute: samsung_channel_up
+
+  - platform: template
+    name: Samsung Channel Down
+    icon: "mdi:chevron-down-box"
+    on_press:
+      - script.execute: samsung_channel_down
+
+  - platform: template
+    name: Samsung Home
+    icon: "mdi:home"
+    on_press:
+      - script.execute: samsung_home
+
+  - platform: template
+    name: Samsung Up
+    icon: "mdi:menu-up"
+    on_press:
+      - script.execute: samsung_up
+
+  - platform: template
+    name: Samsung Left
+    icon: "mdi:menu-left"
+    on_press:
+      - script.execute: samsung_left
+
+  - platform: template
+    name: Samsung Down
+    icon: "mdi:menu-down"
+    on_press:
+      - script.execute: samsung_down
+
+  - platform: template
+    name: Samsung Right
+    icon: "mdi:menu-right"
+    on_press:
+      - script.execute: samsung_right
+
+  - platform: template
+    name: Samsung Select
+    icon: "mdi:cursor-default-click"
+    on_press:
+      - script.execute: samsung_select
+
+  - platform: template
+    name: Samsung Return
+    icon: "mdi:keyboard-backspace"
+    on_press:
+      - script.execute: samsung_return
+
+  - platform: template
+    name: Samsung Exit
+    icon: "mdi:exit-to-app"
+    on_press:
+      - script.execute: samsung_exit
+
+  - platform: template
+    name: Samsung Settings
+    icon: "mdi:cog"
+    on_press:
+      - script.execute: samsung_settings
+
+##############
 # Connection #
 ##############
 
