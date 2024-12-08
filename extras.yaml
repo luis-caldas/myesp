@@ -1,6 +1,5 @@
 
 sensor:
-
   - platform: uptime
     name: Uptime
 

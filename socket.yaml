@@ -17,7 +17,6 @@ esphome:
 # Sensors #
 ###########
 
-
 binary_sensor:
   - platform: gpio
     name: Socket Button
