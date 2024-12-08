@@ -294,31 +294,31 @@ button:
       - script.execute: hdmi_switch_power_off
 
   - platform: template
-    name: HDMI Switch Device_1
+    name: HDMI Switch Device 1
     icon: "mdi:numeric-1"
     on_press:
       - script.execute: hdmi_switch_device_1
 
   - platform: template
-    name: HDMI Switch Device_2
+    name: HDMI Switch Device 2
     icon: "mdi:numeric-2"
     on_press:
       - script.execute: hdmi_switch_device_2
 
   - platform: template
-    name: HDMI Switch Device_3
+    name: HDMI Switch Device 3
     icon: "mdi:numeric-3"
     on_press:
       - script.execute: hdmi_switch_device_3
 
   - platform: template
-    name: HDMI Switch Device_4
+    name: HDMI Switch Device 4
     icon: "mdi:numeric-4"
     on_press:
       - script.execute: hdmi_switch_device_4
 
   - platform: template
-    name: HDMI Switch Device_5
+    name: HDMI Switch Device 5
     icon: "mdi:numeric-5"
     on_press:
       - script.execute: hdmi_switch_device_5
