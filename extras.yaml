@@ -8,12 +8,12 @@ sensor:
     name: Uptime
 
   - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
-    name: "WiFi Radio"
+    name: "Wifi Radio"
     id: wifi_signal_db
 
   - platform: copy # Reports the WiFi signal strength in %
     source_id: wifi_signal_db
-    name: "WiFi Strength"
+    name: "Wifi Strength"
     filters:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: "%"
