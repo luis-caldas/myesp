@@ -194,6 +194,118 @@ button:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8005
 
+###########
+# Roku IR #
+###########
+
+  - platform: template
+    name: Roku Home
+    icon: "mdi:home"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x5743C13E
+          nbits: 32
+
+  - platform: template
+    name: Roku Back
+    icon: "mdi:keyboard-backspace"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x57436798
+          nbits: 32
+
+  - platform: template
+    name: Roku Up
+    icon: "mdi:arrow-up-box"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x57439966
+          nbits: 32
+
+  - platform: template
+    name: Roku Left
+    icon: "mdi:arrow-left-box"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x57437986
+          nbits: 32
+
+  - platform: template
+    name: Roku Down
+    icon: "mdi:arrow-down-box"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x5743CD32
+          nbits: 32
+
+  - platform: template
+    name: Roku Right
+    icon: "mdi:arrow-right-box"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x5743B54A
+          nbits: 32
+
+  - platform: template
+    name: Roku Select
+    icon: "mdi:cursor-default-click"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x07035FA0
+          nbits: 32
+
+  - platform: template
+    name: Roku Replay
+    icon: "mdi:replay"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x57431FE0
+          nbits: 32
+
+  - platform: template
+    name: Roku Options
+    icon: "mdi:dots-horizontal-circle"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x57438778
+          nbits: 32
+
+  - platform: template
+    name: Roku Previous
+    icon: "mdi:rewind"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x57432DD2
+          nbits: 32
+
+  - platform: template
+    name: Roku Next
+    icon: "mdi:fast-forward"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x5743AB54
+          nbits: 32
+
+  - platform: template
+    name: Roku Play Pause
+    icon: "mdi:play-pause"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: transmitter_ir
+          data: 0x574333CC
+          nbits: 32
+
 ##############
 # Connection #
 ##############
