@@ -1,0 +1,103 @@
+#########
+# Setup #
+#########
+
+esphome:
+  name: socket-sample
+  platform: ESP8266
+  board: esp01_1m
+
+##########
+# Extras #
+##########
+
+<<: !include extras.yaml
+
+###########
+# Sensors #
+###########
+
+
+binary_sensor:
+  - platform: gpio
+    name: Socket Button
+    pin:
+      number: GPIO13
+      mode: INPUT_PULLUP
+      inverted: true
+
+    on_click:
+      # Short press toggle relay
+      - min_length: 50ms
+        max_length: 1s
+        then:
+          - switch.toggle: relay
+
+      # Long press reboot
+      - min_length: 4s
+        max_length: 10s
+        then:
+          - switch.turn_on: reboot
+
+####################
+# Swiches & Relays #
+####################
+
+switch:
+
+  - platform: restart
+    name: Restart
+    id: reboot  # Enable reboot if necessary
+
+  - platform: gpio
+    pin: GPIO12
+    id: relay
+    inverted: false
+    name: Socket Switch
+    icon: "mdi:power-socket-uk"
+    on_turn_on:
+      - output.turn_on: led
+    on_turn_off:
+      - output.turn_off: led
+
+########
+# LEDs #
+########
+
+output:
+  - platform: gpio
+    pin: GPIO4
+    inverted: false
+    id: led
+
+status_led:
+  pin:
+    number: GPIO5
+    inverted: false
+
+##############
+# Connection #
+##############
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: !secret device_password
+
+ota:
+  - platform: esphome
+    password: !secret device_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Remote Box Down"
+    password: !secret ap_password
+
+captive_portal:
+
