@@ -19,7 +19,7 @@ remote_receiver:
     pin:
       number: GPIO23
       inverted: true
-    dump: all
+    # dump: all
 
   - id: receiver_rf
     pin: GPIO25
