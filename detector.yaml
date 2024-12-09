@@ -55,7 +55,12 @@ display:
 switch:
   - platform: gpio
     pin: GPIO23
+    name: "Backlight"
+    icon: "mdi:brightness-5"
     id: backlight
+    on_turn_on:
+    - delay: 4s
+    - switch.turn_off: backlight
 
 ##########
 # Button #
@@ -67,9 +72,6 @@ binary_sensor:
     pin:
       number: GPIO25
       mode: INPUT_PULLUP
-
     on_click:
       then:
         - switch.turn_on: backlight
-        - delay: 3.5s
-        - switch.turn_off: backlight
