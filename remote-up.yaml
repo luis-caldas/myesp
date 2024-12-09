@@ -2,8 +2,12 @@
 # Setup #
 #########
 
-esphome:
+substitutions:
+  ap: "Remote Box Up"
   name: remote-box-up
+
+esphome:
+  name: $name
 
 esp32:
   board: esp32dev
@@ -15,8 +19,11 @@ esp32:
 ############
 
 packages:
-  extras: !include extras.yaml
-  estras-32: !include extras-32.yaml
+  # Connection
+  connection: !include common/connection.yaml
+  # Extras
+  extras: !include common/extras.yaml
+  estras-32: !include common/extras-32.yaml
   # Codes
   codes: !include remote/codes.yaml
 
@@ -227,31 +234,3 @@ button:
     icon: "mdi:image-filter-center-focus-weak"
     on_press:
       - script.execute: projector_focus_down
-
-
-##############
-# Connection #
-##############
-
-# Enable logging
-logger:
-
-# Enable Home Assistant API
-api:
-  password: !secret device_password
-
-ota:
-  - platform: esphome
-    password: !secret device_password
-
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: "Remote Box Up"
-    password: !secret ap_password
-
-captive_portal:
-
