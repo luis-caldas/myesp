@@ -10,12 +10,13 @@ esp32:
   framework:
     type: arduino
 
-##########
-# Extras #
-##########
+############
+# Packages #
+############
 
-<<: !include extras.yaml
-<<: !include extras-32.yaml  # Rename to generic name
+packages:
+  extras: !include extras.yaml
+  estras-32: !include extras-32.yaml
 
 ###########
 # Display #

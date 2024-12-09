@@ -7,11 +7,12 @@ esphome:
   platform: ESP8266
   board: esp01_1m
 
-##########
-# Extras #
-##########
+############
+# Packages #
+############
 
-<<: !include extras.yaml
+packages:
+  extras: !include extras.yaml
 
 ###########
 # Sensors #

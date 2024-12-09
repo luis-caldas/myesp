@@ -10,12 +10,15 @@ esp32:
   framework:
     type: arduino
 
-##########
-# Extras #
-##########
+############
+# Packages #
+############
 
-<<: !include extras.yaml
-<<: !include extras-32.yaml
+packages:
+  extras: !include extras.yaml
+  estras-32: !include extras-32.yaml
+  # Codes
+  codes: !include remote/codes.yaml
 
 #############
 # Receivers #
@@ -46,12 +49,6 @@ remote_transmitter:
     pin: GPIO22
     # RF uses a 100% carrier signal
     carrier_duty_percent: 100%
-
-###########
-# Actions #
-###########
-
-<<: !include remote-codes.yaml
 
 ############
 # Soundbar #
