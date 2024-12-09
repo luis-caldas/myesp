@@ -1,0 +1,94 @@
+#########
+# Setup #
+#########
+
+esphome:
+  name: detector-sample
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+##########
+# Extras #
+##########
+
+<<: !include extras.yaml
+<<: !include extras-32.yaml  # Rename to generic name
+
+###########
+# Display #
+###########
+
+spi:
+  clk_pin: GPIO18   # E
+  mosi_pin: GPIO19  # RW
+  interface: spi2
+
+font:
+  - file: "assets/courier.ttf"
+    id: courier
+    size: 12
+
+display:
+  - platform: st7920
+    rotation: 270
+    update_interval: 10s
+    cs_pin:
+      number: GPIO22  # RS
+      inverted: true
+    width: 128
+    height: 64
+    lambda: |-
+      it.print(0, 10, id(courier), "Hello!");
+
+# Backlight
+switch:
+  - platform: gpio
+    pin: GPIO23
+    id: backlight
+
+##########
+# Button #
+##########
+
+binary_sensor:
+  - platform: gpio
+    name: Button
+    pin:
+      number: GPIO25
+      mode: INPUT_PULLUP
+
+    on_click:
+      then:
+        - switch.turn_on: backlight
+        - delay: 3.5s
+        - switch.turn_off: backlight
+
+##############
+# Connection #
+##############
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: !secret device_password
+
+ota:
+  - platform: esphome
+    password: !secret device_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Detector Sample"
+    password: !secret ap_password
+
+captive_portal:
+
