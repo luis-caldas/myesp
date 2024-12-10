@@ -356,3 +356,198 @@ button:
     icon: "mdi:cog"
     on_press:
       - script.execute: samsung_settings
+
+############
+# Receiver #
+############
+
+# ### URC1699 Haier (Power + Refresh) ### #
+
+# Example configuration entry
+binary_sensor:
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Power
+    pioneer:
+      rc_code_1: 0x2008
+    on_press:
+      then:
+        - script.execute: samsung_power
+        - script.execute: soundbar_power
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Source
+    pioneer:
+      rc_code_1: 0x200B
+    on_press:
+      - script.execute: samsung_source
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Channel List
+    pioneer:
+      rc_code_1: 0x204B
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Refresh
+    pioneer:
+      rc_code_1: 0x201A
+    on_press:
+      - script.execute: hdmi_switch_device_up
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Menu
+    pioneer:
+      rc_code_1: 0x2043
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Info
+    pioneer:
+      rc_code_1: 0x20AA
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Text
+    pioneer:
+      rc_code_1: 0x2057
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Home
+    pioneer:
+      rc_code_1: 0x2092
+    on_press:
+      - script.execute: roku_home
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Guide
+    pioneer:
+      rc_code_1: 0x20A9
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Up
+    pioneer:
+      rc_code_1: 0x2040
+    on_press:
+      - script.execute: roku_up
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Left
+    pioneer:
+      rc_code_1: 0x2007
+    on_press:
+      - script.execute: roku_left
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Down
+    pioneer:
+      rc_code_1: 0x2041
+    on_press:
+      - script.execute: roku_down
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Right
+    pioneer:
+      rc_code_1: 0x2006
+    on_click:
+      - script.execute: roku_left
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Select
+    pioneer:
+      rc_code_1: 0x2044
+    on_press:
+      - script.execute: roku_select
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Back
+    pioneer:
+      rc_code_1: 0x2047
+    on_press:
+      - script.execute: roku_back
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Exit
+    pioneer:
+      rc_code_1: 0x205B
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Mute
+    pioneer:
+      rc_code_1: 0x2009
+    on_press:
+      - script.execute: soundbar_mute
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Volume Up
+    pioneer:
+      rc_code_1: 0x2002
+    on_press:
+      - script.execute: soundbar_volume_up
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Volume Down
+    pioneer:
+      rc_code_1: 0x2003
+    on_press:
+      - script.execute: soundbar_volume_down
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Channel Up
+    pioneer:
+      rc_code_1: 0x2000
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Channel Down
+    pioneer:
+      rc_code_1: 0x2001
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Previous
+    pioneer:
+      rc_code_1: 0x20D3
+    on_press:
+      - script.execute: roku_previous
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Next
+    pioneer:
+      rc_code_1: 0x20D4
+    on_press:
+      - script.execute: roku_next
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Play
+    pioneer:
+      rc_code_1: 0x20B0
+    on_press:
+      - script.execute: roku_play_pause
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Pause
+    pioneer:
+      rc_code_1: 0x20D6
+    on_press:
+      - script.execute: roku_play_pause

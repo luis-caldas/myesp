@@ -1,6 +1,10 @@
 
 script:
 
+##################
+# Sender Remotes #
+##################
+
 # ### Soundbar ### #
 
   - id: soundbar_power
