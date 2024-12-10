@@ -72,6 +72,6 @@ binary_sensor:
     pin:
       number: GPIO25
       mode: INPUT_PULLUP
-    on_click:
+    on_press:
       then:
         - switch.turn_on: backlight
