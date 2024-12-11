@@ -63,6 +63,29 @@ switch:
     - switch.turn_off: backlight
 
 ##########
+# Sensor #
+##########
+
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+  id: bus_a
+
+sensor:
+  - platform: scd4x
+    update_interval: 5s
+    co2:
+      name: "CO2"
+      id: sensor_co2
+    temperature:
+      name: "Temperature"
+      id: sensor_temperature
+    humidity:
+      name: "Humidity"
+      id: sensor_humidity
+
+##########
 # Button #
 ##########
 
