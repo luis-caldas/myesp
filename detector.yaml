@@ -36,20 +36,77 @@ spi:
 
 font:
   - file: "assets/courier.ttf"
-    id: courier
+    id: courier_small
+    size: 10
+  - file: "assets/courier.ttf"
+    id: courier_normal
     size: 12
+  - file: "assets/courier.ttf"
+    id: courier_medium
+    size: 26
+  - file: "assets/courier.ttf"
+    id: courier_big
+    size: 34
 
 display:
   - platform: st7920
-    rotation: 270
-    update_interval: 10s
+    rotation: 90
+    update_interval: 5s
     cs_pin:
-      number: GPIO22  # RS
+      number: GPIO27  # RS
       inverted: true
     width: 128
     height: 64
     lambda: |-
-      it.print(0, 10, id(courier), "Hello!");
+      //=====//
+      // PPM //
+      //=====//
+
+      it.printf(0, 0, id(courier_medium), "%4.0f", id(sensor_co2).state);
+      it.printf(42, 24, id(courier_normal), "PPM");
+
+      //==========//
+      // Humidity //
+      //==========//
+
+      // Variables
+      int rectangle_height = 12;
+      int rectangle_width = 60;
+      int height = 68;
+      int width = 64;
+
+      // Calculate
+      int filled = 0;
+      float state_humidity = id(sensor_humidity).state;
+      if (state_humidity == state_humidity)
+        filled = state_humidity / 100 * rectangle_width;
+
+      int height_start = height - (rectangle_height / 2);
+      int width_start = (width - rectangle_width) / 2;
+
+      // Shapes
+      it.rectangle(width_start, height_start, rectangle_width, rectangle_height);
+      it.filled_rectangle(width_start, height_start, filled, rectangle_height);
+
+      // Writings
+      it.print(9, height - 16, id(courier_small), "HUMIDITY");
+      it.print(1, height + (rectangle_height / 2), id(courier_small), "0");
+      it.print(45, height + (rectangle_height / 2), id(courier_small), "100");
+
+      //=============//
+      // Temperature //
+      //=============//
+
+      // Calculate
+      float state_whole = id(sensor_temperature).state;
+      int state_decimal = 0;
+      if (state_whole == state_whole)
+        state_decimal = (int)((state_whole - (int) state_whole) * 100) % 100;
+
+      // Display
+      it.printf(0, 98, id(courier_big), "%2.0f", state_whole);
+      it.printf(40, 103, id(courier_normal), ".%02d", state_decimal);
+      it.printf(47, 115, id(courier_normal), "°C", state_decimal);
 
 # Backlight
 switch:
