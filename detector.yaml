@@ -143,6 +143,29 @@ sensor:
       id: sensor_humidity
 
 ##########
+# Buzzer #
+##########
+
+output:
+  - platform: ledc
+    pin: GPIO4
+    id: buzzer
+
+rtttl:
+  output: buzzer
+
+api:
+  actions:
+    - action: play_rtttl
+      variables:
+        song_str: string
+      then:
+        - rtttl.play:
+            rtttl: !lambda 'return song_str;'
+
+    # - rtttl.play: 'siren:d=8,o=5,b=100:d,e,d,e,d,e,d,e'
+
+##########
 # Button #
 ##########
 
