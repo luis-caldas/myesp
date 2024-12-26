@@ -385,6 +385,7 @@ binary_sensor:
   - platform: remote_receiver
     receiver_id: receiver_ir
     name: Remote Up
+    internal: true
     pioneer:
       rc_code_1: 0x0003
     on_press:
