@@ -1,54 +1,69 @@
+#################
+# Substitutions #
+#################
 
-script:
+substitutions:
+  delay: 135ms
 
 ##################
 # Sender Remotes #
 ##################
 
+script:
+
 # ### Soundbar ### #
 
   - id: soundbar_power
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8001
   - id: soundbar_input
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8002
   - id: soundbar_mute
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8033
   - id: soundbar_volume_up
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8003
   - id: soundbar_volume_down
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8008
   - id: soundbar_bass_up
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8004
   - id: soundbar_bass_down
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8026
   - id: soundbar_trebble_up
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8025
   - id: soundbar_trebble_down
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8027
@@ -57,46 +72,55 @@ script:
 
   - id: hdmi_switch_power_on
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x805C
   - id: hdmi_switch_power_off
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x801F
   - id: hdmi_switch_device_1
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x801B
   - id: hdmi_switch_device_2
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x801E
   - id: hdmi_switch_device_3
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x800D
   - id: hdmi_switch_device_4
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8012
   - id: hdmi_switch_device_5
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8010
   - id: hdmi_switch_device_up
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x800C
   - id: hdmi_switch_device_down
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x8005
@@ -105,72 +129,84 @@ script:
 
   - id: roku_home
     then:
+      - delay: $delay
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
           data: 0x5743C13E
           nbits: 32
   - id: roku_back
     then:
+      - delay: $delay
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
           data: 0x57436798
           nbits: 32
   - id: roku_up
     then:
+      - delay: $delay
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
           data: 0x57439966
           nbits: 32
   - id: roku_left
     then:
+      - delay: $delay
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
           data: 0x57437986
           nbits: 32
   - id: roku_down
     then:
+      - delay: $delay
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
           data: 0x5743CD32
           nbits: 32
   - id: roku_right
     then:
+      - delay: $delay
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
           data: 0x5743B54A
           nbits: 32
   - id: roku_select
     then:
+      - delay: $delay
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
           data: 0x574355AA
           nbits: 32
   - id: roku_replay
     then:
+      - delay: $delay
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
           data: 0x57431FE0
           nbits: 32
   - id: roku_options
     then:
+      - delay: $delay
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
           data: 0x57438778
           nbits: 32
   - id: roku_previous
     then:
+      - delay: $delay
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
           data: 0x57432DD2
           nbits: 32
   - id: roku_next
     then:
+      - delay: $delay
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
           data: 0x5743AB54
           nbits: 32
   - id: roku_play_pause
     then:
+      - delay: $delay
       - remote_transmitter.transmit_lg:
           transmitter_id: transmitter_ir
           data: 0x574333CC
@@ -180,6 +216,7 @@ script:
 
   - id: samsung_power
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E06798
@@ -187,6 +224,7 @@ script:
 
   - id: samsung_source
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E0807F
@@ -194,6 +232,7 @@ script:
 
   - id: samsung_mute
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E0F00F
@@ -201,6 +240,7 @@ script:
 
   - id: samsung_volume_up
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E0E01F
@@ -208,6 +248,7 @@ script:
 
   - id: samsung_volume_down
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E0D02F
@@ -215,6 +256,7 @@ script:
 
   - id: samsung_channel_list
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E0D629
@@ -222,6 +264,7 @@ script:
 
   - id: samsung_channel_up
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E048B7
@@ -229,6 +272,7 @@ script:
 
   - id: samsung_channel_down
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E008F7
@@ -236,6 +280,7 @@ script:
 
   - id: samsung_home
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E09E61
@@ -243,6 +288,7 @@ script:
 
   - id: samsung_up
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E006F9
@@ -250,6 +296,7 @@ script:
 
   - id: samsung_left
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E0A659
@@ -257,6 +304,7 @@ script:
 
   - id: samsung_down
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E08679
@@ -264,6 +312,7 @@ script:
 
   - id: samsung_right
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E046B9
@@ -271,6 +320,7 @@ script:
 
   - id: samsung_select
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E016E9
@@ -278,6 +328,7 @@ script:
 
   - id: samsung_return
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E01AE5
@@ -285,6 +336,7 @@ script:
 
   - id: samsung_exit
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E0B44B
@@ -292,6 +344,7 @@ script:
 
   - id: samsung_settings
     then:
+      - delay: $delay
       - remote_transmitter.transmit_samsung:
           transmitter_id: transmitter_ir
           data: 0xE0E058A7
@@ -301,96 +354,295 @@ script:
 
   - id: projector_power
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x100B
 
   - id: projector_source
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x100C
 
   - id: projector_home
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x101A
 
   - id: projector_up
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x1050
 
   - id: projector_left
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x1051
 
   - id: projector_down
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x1053
 
   - id: projector_right
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x1052
 
   - id: projector_select
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x101C
 
   - id: projector_options
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x1017
 
   - id: projector_back
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x1015
 
   - id: projector_auto_focus
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x10B6
 
   - id: projector_mute
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x1014
 
   - id: projector_volume_up
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x1048
 
   - id: projector_volume_down
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x1049
 
   - id: projector_focus_up
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x1056
 
   - id: projector_focus_down
     then:
+      - delay: $delay
       - remote_transmitter.transmit_pioneer:
           transmitter_id: transmitter_ir
           rc_code_1: 0x1057
+
+####################
+# Receiver Remotes #
+####################
+
+binary_sensor:
+
+# ### URC1699 Haier (Power + Refresh) ### #
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Power
+    internal: true
+    pioneer:
+      rc_code_1: 0x2008
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Source
+    internal: true
+    pioneer:
+      rc_code_1: 0x200B
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Channel List
+    internal: true
+    pioneer:
+      rc_code_1: 0x204B
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Refresh
+    internal: true
+    pioneer:
+      rc_code_1: 0x201A
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Menu
+    internal: true
+    pioneer:
+      rc_code_1: 0x2043
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Info
+    internal: true
+    pioneer:
+      rc_code_1: 0x20AA
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Text
+    internal: true
+    pioneer:
+      rc_code_1: 0x2057
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Home
+    internal: true
+    pioneer:
+      rc_code_1: 0x2092
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Guide
+    internal: true
+    pioneer:
+      rc_code_1: 0x20A9
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Up
+    internal: true
+    pioneer:
+      rc_code_1: 0x2040
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Left
+    internal: true
+    pioneer:
+      rc_code_1: 0x2007
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Down
+    internal: true
+    pioneer:
+      rc_code_1: 0x2041
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Right
+    internal: true
+    pioneer:
+      rc_code_1: 0x2006
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Select
+    internal: true
+    pioneer:
+      rc_code_1: 0x2044
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Back
+    internal: true
+    pioneer:
+      rc_code_1: 0x2047
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Exit
+    internal: true
+    pioneer:
+      rc_code_1: 0x205B
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Mute
+    internal: true
+    pioneer:
+      rc_code_1: 0x2009
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Volume Up
+    internal: true
+    pioneer:
+      rc_code_1: 0x2002
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Volume Down
+    internal: true
+    pioneer:
+      rc_code_1: 0x2003
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Channel Up
+    internal: true
+    pioneer:
+      rc_code_1: 0x2000
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Channel Down
+    internal: true
+    pioneer:
+      rc_code_1: 0x2001
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Previous
+    internal: true
+    pioneer:
+      rc_code_1: 0x20D3
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Next
+    internal: true
+    pioneer:
+      rc_code_1: 0x20D4
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Play
+    internal: true
+    pioneer:
+      rc_code_1: 0x20B0
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: URC Pause
+    internal: true
+    pioneer:
+      rc_code_1: 0x20D6
