@@ -3,11 +3,12 @@
 #########
 
 substitutions:
-  ap: "Remote Box Up"
+  friendly: "Remote Box Up"
   name: remote-box-up
 
 esphome:
   name: $name
+  friendly_name: $friendly
 
 ############
 # Packages #

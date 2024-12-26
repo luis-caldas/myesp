@@ -3,11 +3,12 @@
 #########
 
 substitutions:
-  ap: "Detector"
+  friendly: "Detector"
   name: detector
 
 esphome:
   name: $name
+  friendly_name: $friendly
 
 esp32:
   board: esp32dev
