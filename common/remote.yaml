@@ -18,10 +18,13 @@ remote_receiver:
       inverted: true
 
   - id: receiver_rf
-    pin: GPIO25
-    dump: all
+    pin:
+      number: GPIO13
+    dump: raw
     # Settings to optimize recognition of RF devices
     tolerance: 50%
+    filter: 250us
+    idle: 4ms
 
 remote_transmitter:
   - id: transmitter_ir

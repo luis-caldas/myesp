@@ -21,7 +21,7 @@ packages:
   connection: !include common/connection.yaml
   # Extras
   extras: !include common/extras.yaml
-  estras-32: !include common/extras-32.yaml
+  extras-32: !include common/extras-32.yaml
   # Codes
   codes: !include remote/codes.yaml
 

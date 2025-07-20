@@ -23,5 +23,16 @@ wifi:
     ssid: $friendly
     password: !secret ap_password
 
-captive_portal:
+network:
+  enable_ipv6: false
 
+mdns:
+  disabled: false
+
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: "Europe/Dublin"
+    update_interval: 1h
+
+captive_portal:

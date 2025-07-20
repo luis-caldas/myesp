@@ -1,0 +1,49 @@
+#########
+# Setup #
+#########
+
+substitutions:
+  friendly: "Dimmer Lamp"
+  name: dimmer-lamp
+
+esphome:
+  name: $name
+  friendly_name: $friendly
+
+bk72xx:
+  board: cbu
+
+############
+# Packages #
+############
+
+packages:
+  # Connection
+  connection: !include common/connection.yaml
+  # Extras
+  extras: !include common/extras.yaml
+  extras-32: !include common/extras-32.yaml
+
+############
+# Tuya MCU #
+############
+
+uart:
+  rx_pin: RX1
+  tx_pin: TX1
+  baud_rate: 115200
+
+tuya:
+
+##########
+# Dimmer #
+##########
+
+light:
+  - platform: "tuya"
+    name: "Dimmer"
+    switch_datapoint: 1
+    dimmer_datapoint: 2
+    min_value_datapoint: 6
+    min_value: 0
+    max_value: 1000
