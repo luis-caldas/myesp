@@ -77,15 +77,29 @@ output:
 sensor:
   - platform: hlw8012
     model: bl0937
-    sel_pin: P9
-    cf_pin: P20
-    cf1_pin: P8
+
+    sel_pin:
+      number: P9
+      inverted: true
+    cf_pin:
+      number: P20
+      inverted: true
+    cf1_pin:
+      number: P8
+      inverted: true
+
+    voltage_divider: 781.0662292623375
+    current_resistor: 0.000989624094895091
+
+    update_interval: 5s
+
     current:
       name: "Current"
+      filters:
+        - multiply: 0.4402206705237544
     voltage:
       name: "Voltage"
     power:
       name: "Power"
     energy:
       name: "Energy"
-    update_interval: 1s
