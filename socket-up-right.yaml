@@ -1,0 +1,91 @@
+#########
+# Setup #
+#########
+
+substitutions:
+  friendly: "Socket Up Right"
+  name: socket-up-right
+
+esphome:
+  name: $name
+  friendly_name: $friendly
+
+bk72xx:
+  board: cbu
+
+############
+# Packages #
+############
+
+packages:
+  # Connection
+  connection: !include common/connection.yaml
+  # Extras
+  extras: !include common/extras.yaml
+  extras-32: !include common/extras-32.yaml
+
+###########
+# Sensors #
+###########
+
+binary_sensor:
+  - platform: gpio
+    name: Socket Button
+    pin:
+      number: P24
+      mode: INPUT_PULLUP
+      inverted: true
+
+    on_click:
+      - switch.toggle: relay
+
+##########
+# Relays #
+##########
+
+switch:
+  - platform: gpio
+    pin: P6
+    id: relay
+    inverted: false
+    name: Socket Relay
+    icon: "mdi:power-socket-uk"
+    on_turn_on:
+      - output.turn_on: led_red
+    on_turn_off:
+      - output.turn_off: led_red
+
+########
+# LEDs #
+########
+
+output:
+  - platform: gpio
+    pin: P7
+    inverted: false
+    id: led_red
+
+  - platform: gpio
+    pin: P26
+    inverted: false
+    id: led_blue
+
+################
+# Power Sensor #
+################
+
+sensor:
+  - platform: hlw8012
+    model: bl0937
+    sel_pin: P9
+    cf_pin: P20
+    cf1_pin: P8
+    current:
+      name: "Current"
+    voltage:
+      name: "Voltage"
+    power:
+      name: "Power"
+    energy:
+      name: "Energy"
+    update_interval: 1s
