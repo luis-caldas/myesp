@@ -5,6 +5,22 @@
 substitutions:
   friendly: "Detector"
   name: detector
+  # Tune
+  tune: "siren:d=8,o=7,b=200:d,e,d,e,d,e,d,e"
+  # Limits
+  smoke_limit: "30"
+  # co2_limit: "2000"
+  co2_limit: "600"
+  co_limit: "20"
+  # Updates
+  sensors_update: 5s
+  screen_update: 5s
+  # Timeouts
+  display_timeout: 10s
+  # Intervals
+  siren_interval: 5s
+  # Repeats
+  siren_repeats: "12"
 
 esphome:
   name: $name
@@ -26,122 +42,101 @@ packages:
   extras: !include common/extras.yaml
   extras-32: !include common/extras-32.yaml
 
-###########
-# Display #
-###########
+##########
+# States #
+##########
 
-spi:
-  clk_pin: GPIO18   # E
-  mosi_pin: GPIO19  # RW
-  interface: spi2
+globals:
+  - id: previous_alert
+    type: int
+    restore_value: no
+    initial_value: '0'
 
-font:
-  - file: "assets/courier.ttf"
-    id: courier_small
-    size: 10
-  - file: "assets/courier.ttf"
-    id: courier_normal
-    size: 12
-  - file: "assets/courier.ttf"
-    id: courier_medium
-    size: 26
-  - file: "assets/courier.ttf"
-    id: courier_big
-    size: 34
+script:
+  - id: play_script
+    then:
+      - rtttl.play: $tune
 
-display:
-  - platform: st7920
-    rotation: 90
-    update_interval: 5s
-    cs_pin:
-      number: GPIO27  # RS
-      inverted: true
-    width: 128
-    height: 64
-    lambda: |-
-      //=====//
-      // PPM //
-      //=====//
+binary_sensor:
 
-      it.printf(0, 0, id(courier_medium), "%4.0f", id(sensor_co2).state);
-      it.printf(42, 24, id(courier_normal), "PPM");
+  # Alerted of anomaly
+  - platform: template
+    name: Alert
+    icon: "mdi:alert-box"
+    id: alert_state
+    # Conglomerate all sensors into one binary limit alert
+    condition:
+      any:
+        - sensor.in_range:
+            id: sensor_co2
+            above: $co2_limit
+    # Reset if gone bellow
+    on_release:
+      lambda: |-
+        id(previous_alert) = 1;
 
-      //==========//
-      // Humidity //
-      //==========//
+  # Button
+  - platform: gpio
+    name: Button
+    pin:
+      number: GPIO25
+      mode: INPUT_PULLUP
+    on_press:
+      then:
+        if:
+          condition:
+            switch.is_on: buzzer_state
+          then:
+            switch.template.publish:
+              id: buzzer_state
+              state: OFF
+          else:
+            switch.turn_on: backlight
 
-      // Variables
-      int rectangle_height = 12;
-      int rectangle_width = 60;
-      int height = 68;
-      int width = 64;
-
-      // Calculate
-      int filled = 0;
-      float state_humidity = id(sensor_humidity).state;
-      if (state_humidity == state_humidity)
-        filled = state_humidity / 100 * rectangle_width;
-
-      int height_start = height - (rectangle_height / 2);
-      int width_start = (width - rectangle_width) / 2;
-
-      // Shapes
-      it.rectangle(width_start, height_start, rectangle_width, rectangle_height);
-      it.filled_rectangle(width_start, height_start, filled, rectangle_height);
-
-      // Writings
-      it.print(9, height - 16, id(courier_small), "HUMIDITY");
-      it.print(1, height + (rectangle_height / 2), id(courier_small), "0");
-      it.print(45, height + (rectangle_height / 2), id(courier_small), "100");
-
-      //=============//
-      // Temperature //
-      //=============//
-
-      // Calculate
-      float state_whole = id(sensor_temperature).state;
-      int state_decimal = 0;
-      if (state_whole == state_whole)
-        state_decimal = (int)((state_whole - (int) state_whole) * 100) % 100;
-
-      // Display
-      it.printf(0, 98, id(courier_big), "%2.0f", state_whole);
-      it.printf(40, 103, id(courier_normal), ".%02d", state_decimal);
-      it.printf(47, 115, id(courier_normal), "°C", state_decimal);
-
-# Backlight
 switch:
+
+  # Buzzer state
+  - platform: template
+    name: Siren
+    icon: "mdi:access-point"
+    id: buzzer_state
+    # Only enabled when no previous alert
+    lambda: |-
+      if (id(previous_alert) == 1 && id(alert_state).state) {
+        id(previous_alert) = 2;
+        return true;
+      } else if (id(previous_alert) == 0) {
+        return false;
+      } else {
+        return {};
+      }
+    # Start the noise
+    turn_on_action:
+      # Repeat sirens
+      - repeat:
+          count: $siren_repeats
+          then:
+            - rtttl.play: $tune
+            - delay: $siren_interval
+      # Then turn it off
+      - switch.template.publish:
+          id: buzzer_state
+          state: OFF
+
+    # Cut off siren and update display
+    turn_off_action:
+      - rtttl.stop
+      - component.update: display_lcd
+
+  # Backlight
   - platform: gpio
     pin: GPIO23
-    name: "Backlight"
+    name: Backlight
     icon: "mdi:brightness-5"
     id: backlight
     on_turn_on:
-    - delay: 4s
-    - switch.turn_off: backlight
-
-##########
-# Sensor #
-##########
-
-i2c:
-  sda: GPIO21
-  scl: GPIO22
-  scan: true
-  id: bus_a
-
-sensor:
-  - platform: scd4x
-    update_interval: 5s
-    co2:
-      name: "CO2"
-      id: sensor_co2
-    temperature:
-      name: "Temperature"
-      id: sensor_temperature
-    humidity:
-      name: "Humidity"
-      id: sensor_humidity
+      - delay: $display_timeout
+      - switch.turn_off: backlight
 
 ##########
 # Buzzer #
@@ -164,18 +159,227 @@ api:
         - rtttl.play:
             rtttl: !lambda 'return song_str;'
 
-    # - rtttl.play: 'siren:d=8,o=5,b=100:d,e,d,e,d,e,d,e'
+###############
+# Connections #
+###############
+
+spi:
+  clk_pin: GPIO18   # E
+  mosi_pin: GPIO19  # RW
+  interface: spi2
+
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+  id: bus_a
+
+time:
+  - platform: homeassistant
+    id: esptime
 
 ##########
-# Button #
+# Assets #
 ##########
 
-binary_sensor:
-  - platform: gpio
-    name: Button
-    pin:
-      number: GPIO25
-      mode: INPUT_PULLUP
-    on_press:
-      then:
-        - switch.turn_on: backlight
+image:
+  - file: mdi:smoke
+    id: smoke_image
+    type: BINARY
+    resize: 12x12
+  - file: mdi:water
+    id: water_image
+    type: BINARY
+    resize: 12x12
+  - file: mdi:alert-box
+    id: alert_image
+    type: BINARY
+    resize: 24x24
+  - file: mdi:access-point
+    id: sound_image
+    type: BINARY
+    resize: 16x16
+
+font:
+  - file: "assets/spleen-5x8.pcf"
+    id: font_small
+    glyphs: ' 0123456789/'
+  - file: "assets/spleen-6x12.pcf"
+    id: font_normal
+    glyphs: ' na0123456789/:-.°CO'
+  - file: "assets/spleen-8x16.pcf"
+    id: font_info
+    glyphs: ' na0123456789'
+  - file: "assets/spleen-16x32.pcf"
+    id: font_big
+    glyphs: ' na0123456789'
+
+###########
+# Display #
+###########
+
+display:
+  - platform: st7920
+    rotation: 90
+    update_interval: $screen_update
+    cs_pin:
+      number: GPIO27  # RS
+      inverted: true
+    width: 128
+    height: 64
+    id: display_lcd
+    lambda: |-
+      //======//
+      // Time //
+      //======//
+
+      // Print
+      it.strftime(0, 0, id(font_small), "%m/%d", id(esptime).now());
+      it.strftime(64, 0, id(font_normal), TextAlign::TOP_RIGHT, "%H:%M", id(esptime).now());
+
+      //=======//
+      // Alert //
+      //=======//
+
+      if (id(alert_state).state) {
+        it.image(20, 12, id(alert_image));
+      }
+
+      if (id(buzzer_state).state) {
+        it.image(0, 16, id(sound_image));
+        it.image(48, 16, id(sound_image));
+      }
+
+      //====//
+      // CO //
+      //====//
+
+      int co_height = 38;
+
+      it.printf(4, co_height, id(font_info), "%4.0f", 0.0);
+      it.printf(46, co_height + 1, id(font_normal), " CO");
+
+      //=====//
+      // CO2 //
+      //=====//
+
+      int co2_height = 54;
+
+      it.printf(4, co2_height, id(font_info), "%4.0f", id(sensor_co2).state);
+      it.printf(46, co2_height + 1, id(font_normal), "CO2");
+
+      //========//
+      // Visual //
+      //========//
+
+      // Globals
+      int half_icon = 6;
+
+      int rectangle_height = 12;
+      int rectangle_half_height = 6;
+      int rectangle_width = 50;
+
+      int width_start = 14;
+
+      // Variables
+      int height = 0;
+      int filled = 0;
+      int height_start = 0;
+
+      //==========//
+      // Humidity //
+      //==========//
+
+      height = 78;
+
+      // Calculate
+      filled = 0;
+      float state_humidity = id(sensor_humidity).state;
+      if (state_humidity == state_humidity)
+        filled = state_humidity / 100 * rectangle_width;
+
+      height_start = height - rectangle_half_height;
+
+      // Shapes
+      it.rectangle(width_start, height_start, rectangle_width, rectangle_height);
+      it.filled_rectangle(width_start, height_start, filled, rectangle_height);
+
+      // Icon
+      it.image(0, height - half_icon, id(water_image));
+
+      //=======//
+      // Smoke //
+      //=======//
+
+      height = 94;
+
+      // Calculate
+      filled = 0;
+      float state_smoke = 0;
+      if (state_smoke == state_smoke)
+        filled = state_smoke / 100 * rectangle_width;
+
+      height_start = height - rectangle_half_height;
+
+      // Shapes
+      it.rectangle(width_start, height_start, rectangle_width, rectangle_height);
+      it.filled_rectangle(width_start, height_start, filled, rectangle_height);
+
+      // Icon
+      it.image(0, height - half_icon, id(smoke_image));
+
+      //=============//
+      // Temperature //
+      //=============//
+
+      // Calculate
+      float state_whole = id(sensor_temperature).state;
+      int state_decimal = 0;
+      if (state_whole == state_whole)
+        state_decimal = (int)((state_whole - (int) state_whole) * 100) % 100;
+
+      // Display
+      it.printf(8, 102, id(font_big), "%2.0f", state_whole);
+      it.printf(40, 107, id(font_normal), ".%02d", state_decimal);
+      it.printf(46, 119, id(font_normal), "°C", state_decimal);
+
+###########
+# Sensors #
+###########
+
+sensor:
+
+  # SCD41
+  - platform: scd4x
+    update_interval: $sensors_update
+    co2:
+      name: "CO2"
+      id: sensor_co2
+    temperature:
+      name: "Temperature"
+      id: sensor_temperature
+    humidity:
+      name: "Humidity"
+      id: sensor_humidity
+
+  # # MQ-2
+  # - platform: adc
+  #   update_interval: $sensors_update
+  #   pin: A0
+  #   name: "Smoke"
+  #   id: smoke
+  #   filters:
+  #     - multiply: 100
+  #   unit_of_measurement: "%"
+  #   icon: "mdi:smoke"
+
+  # # MQ-7
+  # - platform: adc
+  #   update_interval: $sensors_update
+  #   pin: A1
+  #   name: "CO"
+  #   id: co
+  #   filters:
+  #     - multiply: 100
+  #   unit_of_measurement: "%"
+  #   icon: "mdi:molecule-co"
