@@ -17,10 +17,9 @@ substitutions:
   screen_update: 5s
   # Timeouts
   display_timeout: 10s
+  siren_timeout: 1min
   # Intervals
   siren_interval: 5s
-  # Repeats
-  siren_repeats: "12"
 
 esphome:
   name: $name
@@ -52,12 +51,11 @@ globals:
     restore_value: no
     initial_value: '0'
 
-script:
-  - id: play_script
-    then:
-      - rtttl.play: $tune
-
 binary_sensor:
+
+  # TODO Add reset button from interface
+  #      Hide siren state as binary sensor
+  #      See how phisical button interacts with the virtual
 
   # Alerted of anomaly
   - platform: template
@@ -71,9 +69,9 @@ binary_sensor:
             id: sensor_co2
             above: $co2_limit
     # Reset if gone bellow
-    on_release:
-      lambda: |-
-        id(previous_alert) = 1;
+    # on_release:
+    #   lambda: |-
+    #     id(previous_alert) = 0;
 
   # Button
   - platform: gpio
@@ -112,17 +110,11 @@ switch:
       }
     # Start the noise
     turn_on_action:
-      # Repeat sirens
-      - repeat:
-          count: $siren_repeats
-          then:
-            - rtttl.play: $tune
-            - delay: $siren_interval
-      # Then turn it off
+      # Wait for period then turn it off
+      - delay: $siren_timeout
       - switch.template.publish:
           id: buzzer_state
           state: OFF
-
     # Cut off siren and update display
     turn_off_action:
       - rtttl.stop
@@ -137,6 +129,21 @@ switch:
     on_turn_on:
       - delay: $display_timeout
       - switch.turn_off: backlight
+
+
+##############
+# Automation #
+##############
+
+# Example configuration entry
+interval:
+  - interval: $siren_interval
+    then:
+      if:
+        condition:
+          switch.is_on: buzzer_state
+        then:
+          rtttl.play: $tune
 
 ##########
 # Buzzer #
