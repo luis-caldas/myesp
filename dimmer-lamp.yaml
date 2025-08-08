@@ -11,7 +11,7 @@ esphome:
   friendly_name: $friendly
 
 bk72xx:
-  board: cbu
+  board: wb3s
 
 ############
 # Packages #
@@ -44,6 +44,6 @@ light:
     name: "Dimmer"
     switch_datapoint: 1
     dimmer_datapoint: 2
-    min_value_datapoint: 6
-    min_value: 0
+    min_value_datapoint: 3
+    min_value: 10
     max_value: 1000
