@@ -7,19 +7,20 @@ substitutions:
   name: detector
   # Tune
   tune: "siren:d=8,o=7,b=200:d,e,d,e,d,e,d,e"
+  # Voltage Divider
+  divider: "4.5"
   # Limits
   smoke_limit: "30"
-  # co2_limit: "2000"
-  co2_limit: "600"
+  co2_limit: "2000"
   co_limit: "20"
   # Updates
-  sensors_update: 5s
+  sensors_update: 10s
   screen_update: 5s
   # Timeouts
   display_timeout: 10s
   siren_timeout: 1min
   # Intervals
-  siren_interval: 5s
+  siren_interval: 10s
 
 esphome:
   name: $name
@@ -41,23 +42,38 @@ packages:
   extras: !include common/extras.yaml
   extras-32: !include common/extras-32.yaml
 
+###############
+# Connections #
+###############
+
+spi:
+  clk_pin: GPIO18   # E
+  mosi_pin: GPIO19  # RW
+  interface: spi2
+
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+  id: bus_a
+
+time:
+  - platform: homeassistant
+    id: esptime
+
 ##########
 # States #
 ##########
 
 globals:
   - id: previous_alert
-    type: int
+    type: bool
     restore_value: no
-    initial_value: '0'
+    initial_value: 'false'
 
 binary_sensor:
 
-  # TODO Add reset button from interface
-  #      Hide siren state as binary sensor
-  #      See how phisical button interacts with the virtual
-
-  # Alerted of anomaly
+  # Anomaly Alert
   - platform: template
     name: Alert
     icon: "mdi:alert-box"
@@ -68,57 +84,92 @@ binary_sensor:
         - sensor.in_range:
             id: sensor_co2
             above: $co2_limit
-    # Reset if gone bellow
-    # on_release:
-    #   lambda: |-
-    #     id(previous_alert) = 0;
-
-  # Button
-  - platform: gpio
-    name: Button
-    pin:
-      number: GPIO25
-      mode: INPUT_PULLUP
+    # Update screen on start
     on_press:
-      then:
-        if:
-          condition:
-            switch.is_on: buzzer_state
-          then:
-            switch.template.publish:
-              id: buzzer_state
-              state: OFF
-          else:
-            switch.turn_on: backlight
-
-switch:
+      - component.update: display_lcd
+    # Reset
+    on_release:
+      lambda: |-
+        id(previous_alert) = false;
 
   # Buzzer state
   - platform: template
     name: Siren
     icon: "mdi:access-point"
     id: buzzer_state
+    internal: true
     # Only enabled when no previous alert
     lambda: |-
-      if (id(previous_alert) == 1 && id(alert_state).state) {
-        id(previous_alert) = 2;
+      if (!id(previous_alert) && id(alert_state).state) {
+        id(previous_alert) = true;
         return true;
-      } else if (id(previous_alert) == 0) {
+      } else if (!id(previous_alert) && !id(alert_state).state) {
         return false;
       } else {
         return {};
       }
     # Start the noise
-    turn_on_action:
+    on_press:
       # Wait for period then turn it off
       - delay: $siren_timeout
-      - switch.template.publish:
+      - binary_sensor.template.publish:
           id: buzzer_state
           state: OFF
     # Cut off siren and update display
-    turn_off_action:
+    on_release:
       - rtttl.stop
       - component.update: display_lcd
+
+  # Physical Button
+  - platform: gpio
+    name: Button
+    pin:
+      number: GPIO25
+      mode: INPUT_PULLUP
+    internal: true
+    on_press:
+      then:
+        if:
+          condition:
+            binary_sensor.is_on: buzzer_state
+          then:
+            binary_sensor.template.publish:
+              id: buzzer_state
+              state: OFF
+          else:
+            switch.turn_on: backlight
+
+  # Charging
+  - platform: template
+    name: Charging
+    icon: mdi:power-socket-uk
+    id: charging
+    lambda: |-
+      if (id(input_voltage).state > 4) {
+        return true;
+      } else {
+        return false;
+      }
+
+button:
+
+  # Virtual Button
+  - platform: template
+    name: Silence
+    id: silence
+    # Optional variables:
+    icon: "mdi:ear-hearing-off"
+    on_press:
+      then:
+        if:
+          condition:
+            binary_sensor.is_on: buzzer_state
+          then:
+            binary_sensor.template.publish:
+              id: buzzer_state
+              state: OFF
+
+switch:
 
   # Backlight
   - platform: gpio
@@ -126,10 +177,10 @@ switch:
     name: Backlight
     icon: "mdi:brightness-5"
     id: backlight
+    restore_mode: ALWAYS_ON
     on_turn_on:
       - delay: $display_timeout
       - switch.turn_off: backlight
-
 
 ##############
 # Automation #
@@ -141,7 +192,7 @@ interval:
     then:
       if:
         condition:
-          switch.is_on: buzzer_state
+          binary_sensor.is_on: buzzer_state
         then:
           rtttl.play: $tune
 
@@ -166,57 +217,50 @@ api:
         - rtttl.play:
             rtttl: !lambda 'return song_str;'
 
-###############
-# Connections #
-###############
-
-spi:
-  clk_pin: GPIO18   # E
-  mosi_pin: GPIO19  # RW
-  interface: spi2
-
-i2c:
-  sda: GPIO21
-  scl: GPIO22
-  scan: true
-  id: bus_a
-
-time:
-  - platform: homeassistant
-    id: esptime
 
 ##########
 # Assets #
 ##########
 
 image:
+  # Smoke Indicator
   - file: mdi:smoke
     id: smoke_image
     type: BINARY
     resize: 12x12
+  # Humidity Indicator
   - file: mdi:water
     id: water_image
     type: BINARY
     resize: 12x12
-  - file: mdi:alert-box
+  # Alert Box
+  - file: mdi:exclamation-thick
     id: alert_image
     type: BINARY
-    resize: 24x24
+    invert_alpha: true
+    resize: 20x20
+  # Sound Indicator
   - file: mdi:access-point
     id: sound_image
     type: BINARY
+    invert_alpha: true
     resize: 16x16
 
 font:
+  # ### Bitmap Fonts ### #
+  # Small
   - file: "assets/spleen-5x8.pcf"
     id: font_small
     glyphs: ' 0123456789/'
+  # Normal
   - file: "assets/spleen-6x12.pcf"
     id: font_normal
     glyphs: ' na0123456789/:-.°CO'
+  # Information
   - file: "assets/spleen-8x16.pcf"
     id: font_info
     glyphs: ' na0123456789'
+  # Big
   - file: "assets/spleen-16x32.pcf"
     id: font_big
     glyphs: ' na0123456789'
@@ -236,44 +280,78 @@ display:
     height: 64
     id: display_lcd
     lambda: |-
+      //=========//
+      // Battery //
+      //=========//
+
+      // Charging
+      if (id(charging).state) {
+        // Bolt
+        it.line(26, 5, 23, 8);
+        it.line(23, 8, 28, 8);
+        it.line(28, 8, 25, 11);
+      }
+
+      // Sizing
+      int battery_height = 9;
+      int battery_width = 18;
+
+      // Calculation
+      int indication = ((float) id(battery_percentage).state / 100) * battery_width;
+
+      // Print Battery
+      it.rectangle(2, 4, battery_width, battery_height);
+      it.filled_rectangle(2, 4, indication, battery_height);
+
+      // Tip
+      it.line(21, 5, 21, 11);
+
       //======//
       // Time //
       //======//
 
       // Print
-      it.strftime(0, 0, id(font_small), "%m/%d", id(esptime).now());
       it.strftime(64, 0, id(font_normal), TextAlign::TOP_RIGHT, "%H:%M", id(esptime).now());
+      it.strftime(64, 12, id(font_small), TextAlign::TOP_RIGHT, "%d/%m", id(esptime).now());
 
       //=======//
       // Alert //
       //=======//
 
+      // Buzzer -> Alerts
       if (id(alert_state).state) {
-        it.image(20, 12, id(alert_image));
+
+        // Bounding Box
+        it.filled_rectangle(0, 23, 64, 20);
+
+        // Alert Image
+        it.image(22, 23, id(alert_image));
+
+        // Buzzer Indicator
+        if (id(buzzer_state).state) {
+          it.image(0, 25, id(sound_image));
+          it.image(48, 25, id(sound_image));
+        }
+
       }
-
-      if (id(buzzer_state).state) {
-        it.image(0, 16, id(sound_image));
-        it.image(48, 16, id(sound_image));
-      }
-
-      //====//
-      // CO //
-      //====//
-
-      int co_height = 38;
-
-      it.printf(4, co_height, id(font_info), "%4.0f", 0.0);
-      it.printf(46, co_height + 1, id(font_normal), " CO");
 
       //=====//
       // CO2 //
       //=====//
 
-      int co2_height = 54;
+      int co2_height = 46;
 
       it.printf(4, co2_height, id(font_info), "%4.0f", id(sensor_co2).state);
       it.printf(46, co2_height + 1, id(font_normal), "CO2");
+
+      //====//
+      // CO //
+      //====//
+
+      int co_height = 60;
+
+      it.printf(4, co_height, id(font_info), "%4.0f", 0.0);
+      it.printf(46, co_height + 1, id(font_normal), " CO");
 
       //========//
       // Visual //
@@ -297,7 +375,7 @@ display:
       // Humidity //
       //==========//
 
-      height = 78;
+      height = 82;
 
       // Calculate
       filled = 0;
@@ -318,11 +396,11 @@ display:
       // Smoke //
       //=======//
 
-      height = 94;
+      height = 98;
 
       // Calculate
       filled = 0;
-      float state_smoke = 0;
+      float state_smoke = id(sensor_smoke).state;
       if (state_smoke == state_smoke)
         filled = state_smoke / 100 * rectangle_width;
 
@@ -369,24 +447,78 @@ sensor:
       name: "Humidity"
       id: sensor_humidity
 
-  # # MQ-2
-  # - platform: adc
-  #   update_interval: $sensors_update
-  #   pin: A0
-  #   name: "Smoke"
-  #   id: smoke
-  #   filters:
-  #     - multiply: 100
-  #   unit_of_measurement: "%"
-  #   icon: "mdi:smoke"
+  # MQ-2
+  - platform: adc
+    update_interval: $sensors_update
+    pin: GPIO36
+    name: "Smoke"
+    id: sensor_smoke
+    filters:
+      - multiply: 100
+    unit_of_measurement: "%"
+    icon: "mdi:smoke"
 
   # # MQ-7
   # - platform: adc
   #   update_interval: $sensors_update
-  #   pin: A1
+  #   pin: GPIO39
   #   name: "CO"
   #   id: co
   #   filters:
   #     - multiply: 100
   #   unit_of_measurement: "%"
   #   icon: "mdi:molecule-co"
+
+  # Battery
+  - platform: adc
+    name: "Battery Voltage"
+    id: battery_voltage
+    pin: GPIO34
+    accuracy_decimals: 2
+    update_interval: $sensors_update
+    unit_of_measurement: "V"
+    icon: mdi:lightning-bolt
+    filters:
+      - multiply: $divider
+    on_value:
+      then:
+        - component.update: battery_percentage
+
+  - platform: template
+    name: "Battery"
+    id: battery_percentage
+    lambda: return id(battery_voltage).state;
+    accuracy_decimals: 0
+    unit_of_measurement: "%"
+    icon: mdi:battery
+    filters:
+      - calibrate_linear:
+         method: exact
+         datapoints:
+          - 0.00 -> 0.0
+          - 3.30 -> 1.0
+          - 3.39 -> 10.0
+          - 3.75 -> 50.0
+          - 4.11 -> 90.0
+          - 4.20 -> 100.0
+      - lambda: |-
+          if (x <= 100) {
+            return x;
+          } else {
+            return 100;
+          }
+          if (x < 0) {
+            return 0;
+          }
+
+  # Input
+  - platform: adc
+    name: "Input Voltage"
+    id: input_voltage
+    pin: GPIO35
+    accuracy_decimals: 2
+    update_interval: $sensors_update
+    unit_of_measurement: "V"
+    icon: mdi:lightning-bolt
+    filters:
+      - multiply: $divider
