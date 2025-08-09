@@ -82,7 +82,7 @@ binary_sensor:
     name: Screen Show
     internal: true
     pioneer:
-      rc_code_1: 0x0008
+      rc_code_1: 0x000A
     on_press:
       - script.execute: screen_show
 
@@ -100,7 +100,7 @@ binary_sensor:
     name: Screen Hide
     internal: true
     pioneer:
-      rc_code_1: 0x000A
+      rc_code_1: 0x0008
     on_press:
       - script.execute: screen_hide
 

@@ -466,7 +466,7 @@ script:
 
 # ### Duronic Projector Screen ### #
 
-  - id: screen_show
+  - id: screen_hide
     then:
       - remote_transmitter.transmit_raw:
           transmitter_id: transmitter_rf
@@ -598,7 +598,7 @@ script:
             -5896
           ]
 
-  - id: screen_hide
+  - id: screen_show
     then:
       - remote_transmitter.transmit_raw:
           transmitter_id: transmitter_rf
