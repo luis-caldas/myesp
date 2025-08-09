@@ -25,180 +25,82 @@ packages:
   # Codes
   codes: !include remote/codes.yaml
 
-###########
-# Roku IR #
-###########
-
 button:
 
-  - platform: template
-    name: Roku Home
-    icon: "mdi:home"
-    on_press:
-      - script.execute: roku_home
+##########
+# Screen #
+##########
 
   - platform: template
-    name: Roku Back
-    icon: "mdi:keyboard-backspace"
+    name: Screen Show
+    icon: "mdi:projector-screen-variant-outline"
     on_press:
-      - script.execute: roku_back
+      - script.execute: screen_show
 
   - platform: template
-    name: Roku Up
-    icon: "mdi:menu-up"
+    name: Screen Stop
+    icon: "mdi:pause-octagon-outline"
     on_press:
-      - script.execute: roku_up
+      - script.execute: screen_stop
 
   - platform: template
-    name: Roku Left
-    icon: "mdi:menu-left"
+    name: Screen Hide
+    icon: "mdi:projector-screen-variant-off-outline"
     on_press:
-      - script.execute: roku_left
+      - script.execute: screen_hide
 
-  - platform: template
-    name: Roku Down
-    icon: "mdi:menu-down"
+##############
+# Converters #
+##############
+
+binary_sensor:
+
+# ### Lights ### #
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: Dimmer On
+    pioneer:
+      rc_code_1: 0x000D
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: Dimmer Bright
+    pioneer:
+      rc_code_1: 0x0009
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: Dimmer Dim
+    pioneer:
+      rc_code_1: 0x001D
+
+# ### Screen ### #
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: Screen Show
+    internal: true
+    pioneer:
+      rc_code_1: 0x0008
     on_press:
-      - script.execute: roku_down
+      - script.execute: screen_show
 
-  - platform: template
-    name: Roku Right
-    icon: "mdi:menu-right"
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: Screen Stop
+    internal: true
+    pioneer:
+      rc_code_1: 0x0004
     on_press:
-      - script.execute: roku_right
+      - script.execute: screen_stop
 
-  - platform: template
-    name: Roku Select
-    icon: "mdi:cursor-default-click"
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: Screen Hide
+    internal: true
+    pioneer:
+      rc_code_1: 0x000A
     on_press:
-      - script.execute: roku_select
+      - script.execute: screen_hide
 
-  - platform: template
-    name: Roku Replay
-    icon: "mdi:replay"
-    on_press:
-      - script.execute: roku_replay
-
-  - platform: template
-    name: Roku Options
-    icon: "mdi:dots-horizontal-circle"
-    on_press:
-      - script.execute: roku_options
-
-  - platform: template
-    name: Roku Previous
-    icon: "mdi:rewind"
-    on_press:
-      - script.execute: roku_previous
-
-  - platform: template
-    name: Roku Next
-    icon: "mdi:fast-forward"
-    on_press:
-      - script.execute: roku_next
-
-  - platform: template
-    name: Roku Play Pause
-    icon: "mdi:play-pause"
-    on_press:
-      - script.execute: roku_play_pause
-
-#############
-# Projector #
-#############
-
-  - platform: template
-    name: Projector Power
-    icon: "mdi:power"
-    on_press:
-      - script.execute: projector_power
-
-  - platform: template
-    name: Projector Source
-    icon: "mdi:video-input-hdmi"
-    on_press:
-      - script.execute: projector_source
-
-  - platform: template
-    name: Projector Home
-    icon: "mdi:home"
-    on_press:
-      - script.execute: projector_home
-
-  - platform: template
-    name: Projector Up
-    icon: "mdi:menu-up"
-    on_press:
-      - script.execute: projector_up
-
-  - platform: template
-    name: Projector Left
-    icon: "mdi:menu-left"
-    on_press:
-      - script.execute: projector_left
-
-  - platform: template
-    name: Projector Down
-    icon: "mdi:menu-down"
-    on_press:
-      - script.execute: projector_down
-
-  - platform: template
-    name: Projector Right
-    icon: "mdi:menu-right"
-    on_press:
-      - script.execute: projector_right
-
-  - platform: template
-    name: Projector Select
-    icon: "mdi:cursor-default-click"
-    on_press:
-      - script.execute: projector_select
-
-  - platform: template
-    name: Projector Options
-    icon: "mdi:dots-horizontal-circle"
-    on_press:
-      - script.execute: projector_options
-
-  - platform: template
-    name: Projector Back
-    icon: "mdi:keyboard-backspace"
-    on_press:
-      - script.execute: projector_back
-
-  - platform: template
-    name: Projector Auto Focus
-    icon: "mdi:focus-auto"
-    on_press:
-      - script.execute: projector_auto_focus
-
-  - platform: template
-    name: Projector Mute
-    icon: "mdi:volume-mute"
-    on_press:
-      - script.execute: projector_mute
-
-  - platform: template
-    name: Projector Volume Up
-    icon: "mdi:volume-plus"
-    on_press:
-      - script.execute: projector_volume_up
-
-  - platform: template
-    name: Projector Volume Down
-    icon: "mdi:volume-minus"
-    on_press:
-      - script.execute: projector_volume_down
-
-  - platform: template
-    name: Projector Focus Up
-    icon: "mdi:image-filter-center-focus-strong"
-    on_press:
-      - script.execute: projector_focus_up
-
-  - platform: template
-    name: Projector Focus Down
-    icon: "mdi:image-filter-center-focus-weak"
-    on_press:
-      - script.execute: projector_focus_down

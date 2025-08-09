@@ -20,7 +20,6 @@ remote_receiver:
   - id: receiver_rf
     pin:
       number: GPIO13
-    dump: raw
     # Settings to optimize recognition of RF devices
     tolerance: 50%
     filter: 250us

@@ -464,185 +464,206 @@ script:
           transmitter_id: transmitter_ir
           rc_code_1: 0x1057
 
-####################
-# Receiver Remotes #
-####################
+# ### Duronic Projector Screen ### #
 
-binary_sensor:
+  - id: screen_show
+    then:
+      - remote_transmitter.transmit_raw:
+          transmitter_id: transmitter_rf
+          code: [
+            # F3 BD CD 80
+            # 1111001110111101110011011
+            # Start
+            192,
+            # Space + Previous End
+            -5896,
+            # ### Code & Space x 4 ### #
+            # First
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568,
+            568, -192,
+            192, -568, 192,
+            # Space + Previous End
+            -5896,
+            # Second
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568,
+            568, -192,
+            192, -568, 192,
+            # Space + Previous End
+            -5896,
+            # Third
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568,
+            568, -192,
+            192, -568, 192,
+            # Space + Previous End
+            -5896,
+            # Fourth
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568,
+            568, -192,
+            192, -568, 192,
+            # Space + Previous End
+            -5896
+          ]
 
-# ### URC1699 Haier (Power + Refresh) ### #
+  - id: screen_stop
+    then:
+      - remote_transmitter.transmit_raw:
+          transmitter_id: transmitter_rf
+          code: [
+            # F3 BD C7 80
+            # 1111001110111101110001111
+            # Start
+            192,
+            # Space + Previous End
+            -5896,
+            # ### Code & Space x 4 ### #
+            # First
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568, 192,
+            # Space + Previous End
+            -5896,
+            # Second
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568, 192,
+            # Space + Previous End
+            -5896,
+            # Third
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568, 192,
+            # Space + Previous End
+            -5896,
+            # Fourth
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568, 192,
+            # Space + Previous End
+            -5896
+          ]
 
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Power
-    internal: true
-    pioneer:
-      rc_code_1: 0x2008
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Source
-    internal: true
-    pioneer:
-      rc_code_1: 0x200B
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Channel List
-    internal: true
-    pioneer:
-      rc_code_1: 0x204B
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Refresh
-    internal: true
-    pioneer:
-      rc_code_1: 0x201A
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Menu
-    internal: true
-    pioneer:
-      rc_code_1: 0x2043
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Info
-    internal: true
-    pioneer:
-      rc_code_1: 0x20AA
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Text
-    internal: true
-    pioneer:
-      rc_code_1: 0x2057
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Home
-    internal: true
-    pioneer:
-      rc_code_1: 0x2092
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Guide
-    internal: true
-    pioneer:
-      rc_code_1: 0x20A9
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Up
-    internal: true
-    pioneer:
-      rc_code_1: 0x2040
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Left
-    internal: true
-    pioneer:
-      rc_code_1: 0x2007
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Down
-    internal: true
-    pioneer:
-      rc_code_1: 0x2041
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Right
-    internal: true
-    pioneer:
-      rc_code_1: 0x2006
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Select
-    internal: true
-    pioneer:
-      rc_code_1: 0x2044
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Back
-    internal: true
-    pioneer:
-      rc_code_1: 0x2047
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Exit
-    internal: true
-    pioneer:
-      rc_code_1: 0x205B
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Mute
-    internal: true
-    pioneer:
-      rc_code_1: 0x2009
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Volume Up
-    internal: true
-    pioneer:
-      rc_code_1: 0x2002
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Volume Down
-    internal: true
-    pioneer:
-      rc_code_1: 0x2003
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Channel Up
-    internal: true
-    pioneer:
-      rc_code_1: 0x2000
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Channel Down
-    internal: true
-    pioneer:
-      rc_code_1: 0x2001
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Previous
-    internal: true
-    pioneer:
-      rc_code_1: 0x20D3
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Next
-    internal: true
-    pioneer:
-      rc_code_1: 0x20D4
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Play
-    internal: true
-    pioneer:
-      rc_code_1: 0x20B0
-
-  - platform: remote_receiver
-    receiver_id: receiver_ir
-    name: URC Pause
-    internal: true
-    pioneer:
-      rc_code_1: 0x20D6
+  - id: screen_hide
+    then:
+      - remote_transmitter.transmit_raw:
+          transmitter_id: transmitter_rf
+          code: [
+            # F3 BD CB 80
+            # 1111001110111101110010111
+            # Start
+            192,
+            # Space + Previous End
+            -5896,
+            # ### Code & Space x 4 ### #
+            # First
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568,
+            568, -192,
+            192, -568, 192, -568, 192,
+            # Space + Previous End
+            -5896,
+            # Second
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568,
+            568, -192,
+            192, -568, 192, -568, 192,
+            # Space + Previous End
+            -5896,
+            # Third
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568,
+            568, -192,
+            192, -568, 192, -568, 192,
+            # Space + Previous End
+            -5896,
+            # Fourth
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568, 192, -568,
+            568, -192,
+            192, -568, 192, -568, 192, -568,
+            568, -192, 568, -192,
+            192, -568,
+            568, -192,
+            192, -568, 192, -568, 192,
+            # Space + Previous End
+            -5896
+          ]
