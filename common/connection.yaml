@@ -5,6 +5,10 @@
 # Enable logging
 logger:
 
+# Flash wear out
+preferences:
+  flash_write_interval: 5min
+
 # Enable Home Assistant API
 api:
   encryption:

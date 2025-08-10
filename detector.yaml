@@ -28,8 +28,6 @@ esphome:
 
 esp32:
   board: esp32dev
-  framework:
-    type: arduino
 
 ############
 # Packages #
