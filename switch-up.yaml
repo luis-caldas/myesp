@@ -75,14 +75,24 @@ light:
     output: relay
     restore_mode: RESTORE_DEFAULT_OFF
     on_turn_on:
-      - light.turn_on: led_info
+      - light.turn_on: led_status
     on_turn_off:
-      - light.turn_off: led_info
+      - light.turn_off: led_status
 
   # Button LED
   - platform: monochromatic
     name: "LED"
-    disabled_by_default: true
     id: led_info
+    internal: true
     output: button_led
+    restore_mode: ALWAYS_OFF
+    disabled_by_default: false
     default_transition_length: 500ms
+
+  # Status LED
+  - platform: binary
+    name: "Status LED"
+    id: led_status
+    internal: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    output: status_led
