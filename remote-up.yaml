@@ -10,13 +10,14 @@ esphome:
   name: $name
   friendly_name: $friendly
 
+esp32:
+  board: esp32dev
+
 ############
 # Packages #
 ############
 
 packages:
-  # Hardware
-  hardware: !include common/remote.yaml
   # Connection
   connection: !include common/connection.yaml
   # Extras
@@ -24,6 +25,35 @@ packages:
   extras-32: !include common/extras-32.yaml
   # Codes
   codes: !include remote/codes.yaml
+
+#############
+# Receivers #
+#############
+
+remote_receiver:
+  - id: receiver_ir
+    pin:
+      number: GPIO23
+      inverted: true
+
+  - id: receiver_rf
+    pin:
+      number: GPIO13
+    # Settings to optimize recognition of RF devices
+    tolerance: 50%
+    filter: 250us
+    idle: 4ms
+
+remote_transmitter:
+  - id: transmitter_ir
+    pin: GPIO2
+    # Infrared remotes use a 50% carrier signal
+    carrier_duty_percent: 50%
+
+  - id: transmitter_rf
+    pin: GPIO22
+    # RF uses a 100% carrier signal
+    carrier_duty_percent: 100%
 
 button:
 
