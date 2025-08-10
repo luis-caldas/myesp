@@ -1,0 +1,88 @@
+#########
+# Setup #
+#########
+
+substitutions:
+  friendly: "Light Switch"
+  name: light-switch
+
+esphome:
+  name: $name
+  friendly_name: $friendly
+
+esp8266:
+  board: esp8285
+
+############
+# Packages #
+############
+
+packages:
+  # Connection
+  connection: !include common/connection.yaml
+  # Extras
+  extras: !include common/extras.yaml
+
+##########
+# Button #
+##########
+
+binary_sensor:
+
+  # Touch Button
+  - platform: gpio
+    pin:
+      inverted: true
+      number: GPIO3
+      mode:
+        input: true
+        pullup: true
+    name: "Button"
+    id: button_main
+    internal: true
+    on_click:
+      - light.toggle: light_main
+
+##########
+# Output #
+##########
+
+output:
+
+  # Relay
+  - platform: gpio
+    pin: GPIO13
+    id: relay
+
+  # Button LED (1.0 = Blue / 0.0 = Red)
+  - platform: esp8266_pwm
+    pin: GPIO14
+    inverted: true
+    id: button_led
+
+  - platform: gpio
+    id: status_led
+    pin:
+      number: GPIO0
+      inverted: true
+
+light:
+
+  # Relay
+  - platform: binary
+    name: "Light"
+    id: light_main
+    output: relay
+    restore_mode: RESTORE_DEFAULT_OFF
+    on_turn_on:
+      - light.turn_on: led_info
+    on_turn_off:
+      - light.turn_off: led_info
+
+  # Button LED
+  - platform: monochromatic
+    name: "LED"
+    disabled_by_default: true
+    id: led_info
+    output: button_led
+    default_transition_length: 500ms
