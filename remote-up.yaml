@@ -89,6 +89,14 @@ binary_sensor:
 
   - platform: remote_receiver
     receiver_id: receiver_ir
+    name: Lights
+    pioneer:
+      rc_code_1: 0x0015
+
+# ### Dimmable Lights ### #
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
     name: Dimmer On
     pioneer:
       rc_code_1: 0x000D
@@ -134,3 +142,10 @@ binary_sensor:
     on_press:
       - script.execute: screen_hide
 
+# ### Fan ### #
+
+  - platform: remote_receiver
+    receiver_id: receiver_ir
+    name: Fan
+    pioneer:
+      rc_code_1: 0x0402
