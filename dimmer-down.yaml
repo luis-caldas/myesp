@@ -1,0 +1,49 @@
+#########
+# Setup #
+#########
+
+substitutions:
+  friendly: "Dimmer Down"
+  name: dimmer-down
+
+esphome:
+  name: $name
+  friendly_name: $friendly
+
+esp32:
+  board: esp32dev
+
+############
+# Packages #
+############
+
+packages:
+  # Connection
+  connection: !include common/connection.yaml
+  # Extras
+  extras: !include common/extras.yaml
+  extras-32: !include common/extras-32.yaml
+
+############
+# Tuya MCU #
+############
+
+uart:
+  rx_pin: GPIO16
+  tx_pin: GPIO17
+  baud_rate: 9600
+
+tuya:
+
+##########
+# Dimmer #
+##########
+
+light:
+  - platform: "tuya"
+    name: "Dimmer"
+    switch_datapoint: 1
+    dimmer_datapoint: 2
+    min_value_datapoint: 3
+    min_value: 10
+    max_value: 1000
