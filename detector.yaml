@@ -45,13 +45,13 @@ packages:
 ###############
 
 spi:
-  clk_pin: GPIO18   # E
-  mosi_pin: GPIO19  # RW
+  clk_pin: GPIO18   # E  - #6
+  mosi_pin: GPIO23  # RW - #5
   interface: spi2
 
 i2c:
-  sda: GPIO21
-  scl: GPIO22
+  sda: GPIO21  # SDA
+  scl: GPIO22  # SCL
   scan: true
   id: bus_a
 
@@ -122,7 +122,7 @@ binary_sensor:
   - platform: gpio
     name: Button
     pin:
-      number: GPIO25
+      number: GPIO4
       mode: INPUT_PULLUP
     internal: true
     on_press:
@@ -171,7 +171,7 @@ switch:
 
   # Backlight
   - platform: gpio
-    pin: GPIO23
+    pin: GPIO0
     name: Backlight
     icon: "mdi:brightness-5"
     id: backlight
@@ -200,7 +200,7 @@ interval:
 
 output:
   - platform: ledc
-    pin: GPIO4
+    pin: GPIO27
     id: buzzer
 
 rtttl:
@@ -268,11 +268,23 @@ font:
 ###########
 
 display:
+
+  # Connections
+  # #01	GND	- GND
+  # #02	VCC	- VCC (5V)
+  # #03 V0  - Not Needed (Regulated By Potentiometer Under Board)
+  # #04	RS	- CS (GPIO5)
+  # #05	R/W	- MOSI (GPIO23)
+  # #06	E	  - CLK (GPIO18)
+  # #15	PSB	- GND (Enable SPI Mode)
+  # #19	BLA	- Backlight
+  # #20	BLK	- GND
+
   - platform: st7920
     rotation: 90
     update_interval: $screen_update
     cs_pin:
-      number: GPIO27  # RS
+      number: GPIO5  # RS - #4
       inverted: true
     width: 128
     height: 64
@@ -448,18 +460,18 @@ sensor:
   # MQ-2
   - platform: adc
     update_interval: $sensors_update
-    pin: GPIO36
+    pin: GPIO34
     name: "Smoke"
     id: sensor_smoke
     filters:
-      - multiply: 100
+      - multiply: 30  # 3.3V / 100%
     unit_of_measurement: "%"
     icon: "mdi:smoke"
 
   # # MQ-7
   # - platform: adc
   #   update_interval: $sensors_update
-  #   pin: GPIO39
+  #   pin: GPIO35
   #   name: "CO"
   #   id: co
   #   filters:
@@ -467,11 +479,27 @@ sensor:
   #   unit_of_measurement: "%"
   #   icon: "mdi:molecule-co"
 
+#########
+# Power #
+#########
+
+  # Input
+  - platform: adc
+    name: "Input Voltage"
+    id: input_voltage
+    pin: GPIO36
+    accuracy_decimals: 2
+    update_interval: $sensors_update
+    unit_of_measurement: "V"
+    icon: mdi:lightning-bolt
+    filters:
+      - multiply: $divider
+
   # Battery
   - platform: adc
     name: "Battery Voltage"
     id: battery_voltage
-    pin: GPIO34
+    pin: GPIO39
     accuracy_decimals: 2
     update_interval: $sensors_update
     unit_of_measurement: "V"
@@ -508,15 +536,3 @@ sensor:
           if (x < 0) {
             return 0;
           }
-
-  # Input
-  - platform: adc
-    name: "Input Voltage"
-    id: input_voltage
-    pin: GPIO35
-    accuracy_decimals: 2
-    update_interval: $sensors_update
-    unit_of_measurement: "V"
-    icon: mdi:lightning-bolt
-    filters:
-      - multiply: $divider
