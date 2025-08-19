@@ -4,6 +4,7 @@
 
 # Temporary files
 ~*
+\#*#
 *.lck
 fp-info-cache
 *-backups
