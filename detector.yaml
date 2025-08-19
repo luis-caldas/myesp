@@ -253,15 +253,15 @@ font:
   # Normal
   - file: "assets/spleen-6x12.pcf"
     id: font_normal
-    glyphs: ' na0123456789/:-.°CO'
+    glyphs: ' 0123456789/:-.°CO'
   # Information
   - file: "assets/spleen-8x16.pcf"
     id: font_info
-    glyphs: ' na0123456789'
+    glyphs: ' 0123456789'
   # Big
   - file: "assets/spleen-16x32.pcf"
     id: font_big
-    glyphs: ' na0123456789'
+    glyphs: ' 0123456789'
 
 ###########
 # Display #
@@ -351,7 +351,9 @@ display:
 
       int co2_height = 46;
 
-      it.printf(4, co2_height, id(font_info), "%4.0f", id(sensor_co2).state);
+      float co2_state = id(sensor_co2).state;
+      co2_state = isnan(co2_state) ? 0 : co2_state;
+      it.printf(4, co2_height, id(font_info), "%4.0f", co2_state);
       it.printf(46, co2_height + 1, id(font_normal), "CO2");
 
       //====//
@@ -360,7 +362,9 @@ display:
 
       int co_height = 60;
 
-      it.printf(4, co_height, id(font_info), "%4.0f", 0.0);
+      float co_state = 0;
+      co_state = isnan(co_state) ? 0 : co_state;
+      it.printf(4, co_height, id(font_info), "%4.0f", co_state);
       it.printf(46, co_height + 1, id(font_normal), " CO");
 
       //========//
@@ -429,6 +433,7 @@ display:
 
       // Calculate
       float state_whole = id(sensor_temperature).state;
+      state_whole = isnan(state_whole) ? 0 : state_whole;
       int state_decimal = 0;
       if (state_whole == state_whole)
         state_decimal = (int)((state_whole - (int) state_whole) * 100) % 100;
