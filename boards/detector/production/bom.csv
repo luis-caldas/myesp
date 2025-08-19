@@ -1,0 +1,11 @@
+﻿Designator,Footprint,Quantity,Value,LCSC Part #
+BAT1,JST_XH_S4B-XH-A_1x04_P2.50mm_Horizontal,1,Battery,
+BZ1,Buzzer_12x9.5RM7.6,1,Buzzer,
+J1,DFRobot Sensor,1,CO,
+J2,DFRobot Sensor,1,Smoke,
+LCD1,ST7920,1,ST7920,
+"Q1, Q2",SOT-23,2,MMBT2222A,
+"R1, R2, R3",0805,3,10KΩ,
+S1,SCD41,1,SCD41,
+SW1,Button,1,Button,
+U1,ESP32-DevKitC,1,ESP32,

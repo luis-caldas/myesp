@@ -6,5 +6,6 @@
 ~*
 \#*#
 *.lck
+_autosave*
 fp-info-cache
 *-backups
