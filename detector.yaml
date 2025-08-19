@@ -135,7 +135,7 @@ binary_sensor:
               id: buzzer_state
               state: OFF
           else:
-            switch.turn_on: backlight
+            light.turn_on: backlight
 
   # Charging
   - platform: template
@@ -167,18 +167,18 @@ button:
               id: buzzer_state
               state: OFF
 
-switch:
+# switch:
 
-  # Backlight
-  - platform: gpio
-    pin: GPIO16  # Invert if using transistor
-    name: Backlight
-    icon: "mdi:brightness-5"
-    id: backlight
-    restore_mode: ALWAYS_ON
-    on_turn_on:
-      - delay: $display_timeout
-      - switch.turn_off: backlight
+#   # Backlight
+#   - platform: gpio
+#     pin: GPIO16
+#     name: Backlight
+#     icon: "mdi:brightness-5"
+#     id: backlight
+#     restore_mode: ALWAYS_ON
+#     on_turn_on:
+#       - delay: $display_timeout
+#       - switch.turn_off: backlight
 
 ##############
 # Automation #
@@ -194,11 +194,33 @@ interval:
         then:
           rtttl.play: $tune
 
+#############
+# Backlight #
+#############
+
+light:
+  - platform: monochromatic
+    output: out_back
+    id: backlight
+    name: "Backlight"
+    restore_mode: ALWAYS_ON
+    initial_state:
+      brightness: 100%
+    default_transition_length: 0.5s
+    on_turn_on:
+      - delay: $display_timeout
+      - light.turn_off: backlight
+
+output:
+
+  - platform: ledc
+    pin: GPIO16
+    id: out_back
+
 ##########
 # Buzzer #
 ##########
 
-output:
   - platform: ledc
     pin: GPIO27
     id: buzzer
