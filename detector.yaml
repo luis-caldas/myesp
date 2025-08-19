@@ -230,12 +230,12 @@ rtttl:
 
 api:
   actions:
-    - action: play_rtttl
+    - action: play_buzzer
       variables:
-        song_str: string
+        song_string: string
       then:
         - rtttl.play:
-            rtttl: !lambda 'return song_str;'
+            rtttl: !lambda 'return song_string;'
 
 
 ##########
