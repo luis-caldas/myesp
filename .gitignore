@@ -1,11 +1,30 @@
-# ESPHome
+###########
+# ESPHome #
+###########
+
 /.esphome/
 /secrets.yaml
 
-# Temporary files
+###################
+# Temporary files #
+###################
+
+# Temp
 ~*
 \#*#
+
+# Locks
 *.lck
+
+# Save
 _autosave*
+
+# Cache
 fp-info-cache
+
+# Backups
 *-backups
+backups/
+
+# Builds
+production/
