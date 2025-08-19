@@ -171,7 +171,7 @@ switch:
 
   # Backlight
   - platform: gpio
-    pin: GPIO0
+    pin: GPIO16
     name: Backlight
     icon: "mdi:brightness-5"
     id: backlight
@@ -273,7 +273,7 @@ display:
   # #01	GND	- GND
   # #02	VCC	- VCC (5V)
   # #03 V0  - Not Needed (Regulated By Potentiometer Under Board)
-  # #04	RS	- CS (GPIO5)
+  # #04	RS	- Any GPIO || CS (GPIO5)
   # #05	R/W	- MOSI (GPIO23)
   # #06	E	  - CLK (GPIO18)
   # #15	PSB	- GND (Enable SPI Mode)
@@ -284,7 +284,7 @@ display:
     rotation: 90
     update_interval: $screen_update
     cs_pin:
-      number: GPIO5  # RS - #4
+      number: GPIO17  # RS - #4
       inverted: true
     width: 128
     height: 64
