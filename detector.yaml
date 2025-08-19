@@ -171,7 +171,7 @@ switch:
 
   # Backlight
   - platform: gpio
-    pin: GPIO16
+    pin: GPIO16  # Invert if using transistor
     name: Backlight
     icon: "mdi:brightness-5"
     id: backlight
