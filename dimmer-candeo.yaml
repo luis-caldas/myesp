@@ -3,15 +3,16 @@
 #########
 
 substitutions:
-  friendly: "Dimmer Lamp"
-  name: dimmer-lamp
+  friendly: "Dimmer"
+  name: dimmer-candeo
 
 esphome:
   name: $name
   friendly_name: $friendly
+  name_add_mac_suffix: true
 
-bk72xx:
-  board: wb3s
+esp32:
+  board: esp32dev
 
 ############
 # Packages #
@@ -29,9 +30,9 @@ packages:
 ############
 
 uart:
-  rx_pin: RX1
-  tx_pin: TX1
-  baud_rate: 115200
+  rx_pin: GPIO16
+  tx_pin: GPIO17
+  baud_rate: 9600
 
 tuya:
 

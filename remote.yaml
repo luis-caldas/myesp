@@ -3,12 +3,13 @@
 #########
 
 substitutions:
-  friendly: "Remote Box Up"
-  name: remote-box-up
+  friendly: "Remote Box"
+  name: remote-box
 
 esphome:
   name: $name
   friendly_name: $friendly
+  name_add_mac_suffix: true
 
 esp32:
   board: esp32dev

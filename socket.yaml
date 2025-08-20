@@ -3,12 +3,13 @@
 #########
 
 substitutions:
-  friendly: "Socket Up Right"
-  name: socket-up-right
+  friendly: "Socket"
+  name: socket
 
 esphome:
   name: $name
   friendly_name: $friendly
+  name_add_mac_suffix: true
 
 bk72xx:
   board: cbu
