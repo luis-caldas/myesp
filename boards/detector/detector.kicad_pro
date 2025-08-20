@@ -502,7 +502,7 @@
       "plot": "/home/lu/home/downloads/gerber/",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "../../../../../home/downloads/detector.stl",
       "svg": "",
       "vrml": ""
     },
