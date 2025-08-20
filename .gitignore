@@ -23,7 +23,7 @@ _autosave*
 fp-info-cache
 
 # Backups
-&.FCBak
+*.FCBak
 *-backups
 backups/
 
