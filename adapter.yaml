@@ -7,6 +7,8 @@ substitutions:
   name: adapter
   # Intervals
   sensors_update: 10s
+  # ! Limits !
+  current_limit: "10"
 
 esphome:
   name: $name
@@ -90,8 +92,10 @@ sensor:
       name: "Current"
       filters:
         - throttle_average: ${sensors_update}
-        # When no load
-        - lambda: if (x < 0.060) return 0.0; else return x;
+      on_value_range:
+        - above: ${current_limit}
+          then:
+            - switch.turn_off: relay
 
     # Voltage
     voltage:
@@ -105,8 +109,6 @@ sensor:
       id: power_sensor
       filters:
         - throttle_average: ${sensors_update}
-        # When no load
-        - lambda: if (x < 3.0) return 0.0; else return x;
 
     # Other Powers
     apparent_power:

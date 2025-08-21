@@ -5,6 +5,8 @@
 substitutions:
   friendly: "Socket"
   name: socket
+  # ! Limits !
+  current_limit: "10"
 
 esphome:
   name: $name
@@ -98,6 +100,10 @@ sensor:
       name: "Current"
       filters:
         - multiply: 0.4402206705237544
+      on_value_range:
+        - above: ${current_limit}
+          then:
+            - switch.turn_off: relay
     voltage:
       name: "Voltage"
     power:
