@@ -87,6 +87,7 @@ binary_sensor:
     pin:
       number: GPIO4
       mode: INPUT_PULLUP
+      inverted: true
     name: "Power Switch"
     id: external_switch
     internal: true
