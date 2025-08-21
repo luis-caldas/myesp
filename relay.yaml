@@ -1,0 +1,192 @@
+#########
+# Setup #
+#########
+
+substitutions:
+  friendly: "Adapter"
+  name: adapter
+  # Intervals
+  sensors_update: 10s
+  # ! Limits !
+  current_limit: "10"
+
+esphome:
+  name: $name
+  friendly_name: $friendly
+  name_add_mac_suffix: true
+  platformio_options:
+    board_build.mcu: esp32c3
+    board_build.variant: esp32c3
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-c3-devkitm-1
+  flash_size: 4MB
+  variant: ESP32C3
+  framework:
+    type: esp-idf
+    version: recommended
+
+# Remove Web Server
+captive_portal: !remove
+
+############
+# Packages #
+############
+
+packages:
+  # Connection
+  connection: !include common/connection.yaml
+  # Extras
+  extras: !include common/extras.yaml
+  extras-32: !include common/extras-32.yaml
+
+##############
+# Connection #
+##############
+
+uart:
+  rx_pin: GPIO20
+  baud_rate: 4800
+  data_bits: 8
+  stop_bits: 1
+  parity: EVEN
+
+###########
+# Globals #
+###########
+
+globals:
+
+  - id: total_energy
+    type: float
+    restore_value: yes
+    initial_value: '0.0'
+
+###########
+# Sensors #
+###########
+
+binary_sensor:
+
+  # Main Button
+  - platform: gpio
+    pin:
+      number: GPIO3
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Power Button"
+    id: power_button
+    internal: true
+    on_click:
+      then:
+        - switch.toggle: relay
+
+  # Wire Button / Switch
+  - platform: gpio
+    pin:
+      number: GPIO4
+      mode: INPUT_PULLUP
+    name: "Power Switch"
+    id: external_switch
+    internal: true
+    on_click:
+      then:
+        - switch.toggle: relay
+
+sensor:
+
+  - platform: cse7766
+    id: energy_sensor
+
+    # Current
+    current:
+      name: "Current"
+      filters:
+        - throttle_average: ${sensors_update}
+      on_value_range:
+        - above: ${current_limit}
+          then:
+            - switch.turn_off: relay
+
+    # Voltage
+    voltage:
+      name: "Voltage"
+      filters:
+        - throttle_average: ${sensors_update}
+
+    # Power
+    power:
+      name: "Power"
+      id: power_sensor
+      filters:
+        - throttle_average: ${sensors_update}
+
+    # Other Powers
+    apparent_power:
+      name: "Apparent Power"
+      filters:
+        - throttle_average: ${sensors_update}
+    reactive_power:
+      name: "Reactive Power"
+      filters:
+        - throttle_average: ${sensors_update}
+    power_factor:
+      name: "Power Factor"
+      filters:
+        - throttle_average: ${sensors_update}
+
+    # Energy
+    energy:
+      name: "Energy"
+      id: energy
+      unit_of_measurement: kWh
+      filters:
+        - throttle: ${sensors_update}
+        # Multiplication factor from W to kW is 0.001
+        - multiply: 0.001
+      on_value:
+        then:
+          - lambda: |-
+              static float previous_energy_value = 0.0;
+              float current_energy_value = id(energy).state;
+              id(total_energy) += current_energy_value - previous_energy_value;
+              previous_energy_value = current_energy_value;
+              id(total_energy_sensor).update();
+
+  # Total energy calculation
+  - platform: template
+    name: "Total Energy"
+    id: total_energy_sensor
+    unit_of_measurement: kWh
+    device_class: "energy"
+    state_class: "total_increasing"
+    icon: "mdi:lightning-bolt"
+    accuracy_decimals: 3
+    lambda: |-
+      return id(total_energy);
+    update_interval: ${sensors_update}
+
+#########
+# Relay #
+#########
+
+switch:
+
+  - platform: gpio
+    name: "Switch"
+    pin: GPIO6
+    id: relay
+    icon: mdi:power-socket-uk
+
+#########
+# Light #
+#########
+
+output:
+
+  - platform: gpio
+    id: light
+    pin:
+      inverted: true
+      number: GPIO7
