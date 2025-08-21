@@ -3,8 +3,8 @@
 #########
 
 substitutions:
-  friendly: "Adapter"
-  name: adapter
+  friendly: "Relay"
+  name: relay
   # Intervals
   sensors_update: 10s
   # ! Limits !
@@ -108,6 +108,10 @@ sensor:
         - above: ${current_limit}
           then:
             - switch.turn_off: relay
+            - homeassistant.service:
+                service: notify.notify
+                data:
+                  message: "Overcurrent"
 
     # Voltage
     voltage:
@@ -177,7 +181,7 @@ switch:
     name: "Switch"
     pin: GPIO6
     id: relay
-    icon: mdi:power-socket-uk
+    icon: mdi:electric-switch
 
 #########
 # Light #

@@ -96,6 +96,11 @@ sensor:
         - above: ${current_limit}
           then:
             - switch.turn_off: relay
+            - homeassistant.service:
+                service: notify.notify
+                data:
+                  message: "Overcurrent"
+
 
     # Voltage
     voltage:
