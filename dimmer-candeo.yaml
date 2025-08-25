@@ -57,12 +57,12 @@ tuya:
 # Dimmer #
 ##########
 
-# light:
-#   - platform: "tuya"
-#     name: "Dimmer"
-#     restore_mode: RESTORE_DEFAULT_OFF
-#     default_transition_length: $transition
-#     switch_datapoint: 1
-#     dimmer_datapoint: 2
-#     min_value: 10
-#     max_value: 1000
+light:
+  - platform: "tuya"
+    name: "Dimmer"
+    restore_mode: RESTORE_DEFAULT_OFF
+    # default_transition_length: $transition
+    switch_datapoint: 1
+    dimmer_datapoint: 2
+    min_value: 10
+    max_value: 1000
