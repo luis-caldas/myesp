@@ -7,7 +7,7 @@
 	(title_block
 		(title "Detector")
 		(date "08/2025")
-		(rev "v0.1a")
+		(rev "v0.2a")
 		(company "Caldas")
 		(comment 1 "Simple ESP Detector")
 	)
