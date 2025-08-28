@@ -8,7 +8,8 @@ substitutions:
   # Tune
   tune: "siren:d=8,o=7,b=200:d,e,d,e,d,e,d,e"
   # Voltage Divider
-  divider: "4.5"
+  divider: "2"
+  input_voltage: "3.3"
   # Limits
   smoke_limit: "30"
   co2_limit: "2000"
@@ -372,7 +373,7 @@ display:
 
       int co_height = 60;
 
-      float co_state = 0;
+      float co_state = 0;  // id(sensor_co).state;
       co_state = isnan(co_state) ? 0 : co_state;
       it.printf(4, co_height, id(font_info), "%4.0f", co_state);
       it.printf(46, co_height + 1, id(font_normal), " CO");
@@ -424,7 +425,7 @@ display:
 
       // Calculate
       filled = 0;
-      float state_smoke = id(sensor_smoke).state;
+      float state_smoke = 0;  // id(sensor_smoke).state;
       if (state_smoke == state_smoke)
         filled = state_smoke / 100 * rectangle_width;
 
@@ -472,27 +473,73 @@ sensor:
       name: "Humidity"
       id: sensor_humidity
 
-  # MQ-2
+  # Smoke
   - platform: adc
-    update_interval: $sensors_update
     pin: GPIO34
-    name: "Smoke"
-    id: sensor_smoke
-    filters:
-      - multiply: 30  # 3.3V / 100%
-    unit_of_measurement: "%"
-    icon: "mdi:smoke"
+    id: smoke_voltage
+    name: "Smoke Sensor Voltage"
+    update_interval: $sensors_update
+    internal: true
+    unit_of_measurement: "V"
+    accuracy_decimals: 3
+    attenuation: 12dB
+    on_value:
+      then:
+        - component.update: smoke_resistance
 
-  # # MQ-7
-  # - platform: adc
-  #   update_interval: $sensors_update
-  #   pin: GPIO35
-  #   name: "CO"
-  #   id: co
-  #   filters:
-  #     - multiply: 100
-  #   unit_of_measurement: "%"
-  #   icon: "mdi:molecule-co"
+  - platform: template
+    id: smoke_resistance
+    name: "Smoke Resistance"
+    unit_of_measurement: "Ω"
+    update_interval: never
+    lambda: |-
+      // Load Resistor
+      const float r_l = 4700.0;
+
+      // Reference voltage
+      float now_v = id(smoke_voltage).state;
+
+      // Safety
+      if (now_v == 0) return 0;
+
+      // Rs Voltage Divider
+      float r_s = r_l * ($input_voltage - now_v) / now_v;
+
+      return r_s;
+
+  # CO
+  - platform: adc
+    pin: GPIO35
+    id: co_voltage
+    name: "CO Sensor Voltage"
+    update_interval: $sensors_update
+    internal: true
+    unit_of_measurement: "V"
+    accuracy_decimals: 3
+    attenuation: 12dB
+    on_value:
+      then:
+        - component.update: co_resistance
+
+  - platform: template
+    id: co_resistance
+    name: "Carbon Monoxide Resistance"
+    unit_of_measurement: "Ω"
+    update_interval: never
+    lambda: |-
+      // Load Resistor
+      const float r_l = 10000.0;
+
+      // Reference voltage
+      float now_v = id(co_voltage).state;
+
+      // Safety
+      if (now_v == 0) return 0;
+
+      // Rs Voltage Divider
+      float r_s = r_l * ($input_voltage - now_v) / now_v;
+
+      return r_s;
 
 #########
 # Power #
@@ -503,24 +550,26 @@ sensor:
     name: "Input Voltage"
     id: input_voltage
     pin: GPIO36
-    accuracy_decimals: 2
-    update_interval: $sensors_update
-    unit_of_measurement: "V"
-    icon: mdi:lightning-bolt
+    attenuation: 12dB
+    accuracy_decimals: 3
     filters:
       - multiply: $divider
+    unit_of_measurement: "V"
+    update_interval: $sensors_update
+    icon: mdi:lightning-bolt
 
   # Battery
   - platform: adc
     name: "Battery Voltage"
     id: battery_voltage
     pin: GPIO39
-    accuracy_decimals: 2
-    update_interval: $sensors_update
-    unit_of_measurement: "V"
-    icon: mdi:lightning-bolt
+    attenuation: 12dB
+    accuracy_decimals: 3
     filters:
       - multiply: $divider
+    unit_of_measurement: "V"
+    update_interval: $sensors_update
+    icon: mdi:lightning-bolt
     on_value:
       then:
         - component.update: battery_percentage
