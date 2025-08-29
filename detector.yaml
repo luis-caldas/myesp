@@ -92,6 +92,12 @@ binary_sensor:
         - sensor.in_range:
             id: sensor_co2
             above: $co2_limit
+        - sensor.in_range:
+            id: co_ppm
+            above: $co_limit
+        - sensor.in_range:
+            id: smoke_percentage
+            above: $smoke_limit
     # Update screen on start
     on_press:
       - component.update: display_lcd
