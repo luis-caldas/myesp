@@ -10,6 +10,14 @@ substitutions:
   # Voltage Divider
   divider: "2"
   input_voltage: "3.3"
+  # ADC
+  accuracy: "2"
+  charger_voltage_cut: "4"
+  # Sensors
+  co_load: "10000.0"
+  co_fresh: "95000.0"
+  smoke_load: "4700.0"
+  smoke_fresh: "60000.0"
   # Limits
   smoke_limit: "30"
   co2_limit: "2000"
@@ -142,10 +150,10 @@ binary_sensor:
   # Charging
   - platform: template
     name: Charging
-    icon: mdi:power-socket-uk
+    icon: mdi:lightning-bolt
     id: charging
     lambda: |-
-      if (id(input_voltage).state > 4) {
+      if (id(input_voltage).state > $charger_voltage_cut) {
         return true;
       } else {
         return false;
@@ -373,7 +381,7 @@ display:
 
       int co_height = 60;
 
-      float co_state = 0;  // id(sensor_co).state;
+      float co_state = id(co_ppm).state;
       co_state = isnan(co_state) ? 0 : co_state;
       it.printf(4, co_height, id(font_info), "%4.0f", co_state);
       it.printf(46, co_height + 1, id(font_normal), " CO");
@@ -425,7 +433,7 @@ display:
 
       // Calculate
       filled = 0;
-      float state_smoke = 0;  // id(sensor_smoke).state;
+      float state_smoke = id(smoke_percentage).state;
       if (state_smoke == state_smoke)
         filled = state_smoke / 100 * rectangle_width;
 
@@ -464,7 +472,7 @@ sensor:
   - platform: scd4x
     update_interval: $sensors_update
     co2:
-      name: "CO2"
+      name: "Carbon Dioxide"
       id: sensor_co2
     temperature:
       name: "Temperature"
@@ -477,59 +485,113 @@ sensor:
   - platform: adc
     pin: GPIO34
     id: smoke_voltage
-    name: "Smoke Sensor Voltage"
-    update_interval: $sensors_update
+    name: "Smoke Voltage"
     internal: true
     unit_of_measurement: "V"
-    accuracy_decimals: 3
-    attenuation: 12dB
+    update_interval: $sensors_update
+    attenuation: auto
     on_value:
       then:
-        - component.update: smoke_resistance
+        - component.update: smoke_ratio
 
   - platform: template
-    id: smoke_resistance
-    name: "Smoke Resistance"
-    unit_of_measurement: "Ω"
+    id: smoke_ratio
+    name: "Smoke Ratio"
+    internal: true
+    unit_of_measurement: "Rs/R0"
     update_interval: never
     lambda: |-
-      // Load Resistor
-      const float r_l = 4700.0;
-
       // Reference voltage
       float now_v = id(smoke_voltage).state;
 
       // Safety
       if (now_v == 0) return 0;
 
-      // Rs Voltage Divider
-      float r_s = r_l * ($input_voltage - now_v) / now_v;
+      // Voltage Divider
+      float r_s = $smoke_load * ($input_voltage - now_v) / now_v;
 
-      return r_s;
+      // Ratio
+      return r_s / $smoke_fresh;
+    on_value:
+      then:
+        - component.update: smoke_ppm
+
+  - platform: template
+    id: smoke_ppm
+    name: "Smoke PPM"
+    internal: true
+    unit_of_measurement: "ppm"
+    update_interval: never
+    lambda: |-
+      return id(smoke_ratio).state;
+    filters:
+      - calibrate_linear:
+          method: exact
+          datapoints:
+            - 0.0589 -> 1672.54
+            - 0.065 -> 998.41
+            - 0.07 -> 506.75
+            - 0.078 -> 200.66
+            - 0.08 -> 100.57
+            - 0.102 -> 50.26
+            - 0.108 -> 40.01
+            - 0.12 -> 30.13
+            - 0.13 -> 20.12
+            - 0.17 -> 10.01
+            - 0.23 -> 4.99
+            - 0.26 -> 3.99
+            - 0.33 -> 3.00
+            - 0.43 -> 2.01
+            - 0.585 -> 1.02
+            - 0.728 -> 0.43
+            - 1 -> 0
+    on_value:
+      then:
+        - component.update: smoke_percentage
+
+  - platform: template
+    id: smoke_percentage
+    name: "Smoke"
+    icon: mdi:smoke
+    unit_of_measurement: "%"
+    update_interval: never
+    accuracy_decimals: $accuracy
+    lambda: return id(smoke_ppm).state;
+    filters:
+      - calibrate_linear:
+          datapoints:
+            - 0 -> 0
+            - 1000 -> 100
+      - lambda: |-
+          if (x <= 100) {
+            return x;
+          } else {
+            return 100;
+          }
+          if (x <= 0) {
+            return 0;
+          }
 
   # CO
   - platform: adc
     pin: GPIO35
     id: co_voltage
-    name: "CO Sensor Voltage"
-    update_interval: $sensors_update
+    name: "Carbon Monoxide Voltage"
     internal: true
     unit_of_measurement: "V"
-    accuracy_decimals: 3
-    attenuation: 12dB
+    update_interval: $sensors_update
+    attenuation: auto
     on_value:
       then:
-        - component.update: co_resistance
+        - component.update: co_ratio
 
   - platform: template
-    id: co_resistance
-    name: "Carbon Monoxide Resistance"
-    unit_of_measurement: "Ω"
+    id: co_ratio
+    name: "Carbon Monoxide Ratio"
+    internal: true
+    unit_of_measurement: "Rs/R0"
     update_interval: never
     lambda: |-
-      // Load Resistor
-      const float r_l = 10000.0;
-
       // Reference voltage
       float now_v = id(co_voltage).state;
 
@@ -537,9 +599,36 @@ sensor:
       if (now_v == 0) return 0;
 
       // Rs Voltage Divider
-      float r_s = r_l * ($input_voltage - now_v) / now_v;
+      float r_s = $co_load * ($input_voltage - now_v) / now_v;
 
-      return r_s;
+      return r_s / $co_fresh;
+    on_value:
+      then:
+        - component.update: co_ppm
+
+  - platform: template
+    id: co_ppm
+    name: "Carbon Monoxide"
+    icon: mdi:molecule-co
+    unit_of_measurement: "ppm"
+    update_interval: never
+    lambda: |-
+      return id(co_ratio).state;
+    filters:
+      - calibrate_linear:
+          method: exact
+          datapoints:
+          - 0.11 -> 998.24
+          - 0.12 -> 502.67
+          - 0.14 -> 149.72
+          - 0.17 -> 98.76
+          - 0.21 -> 49.95
+          - 0.28 -> 20.12
+          - 0.40 -> 10.10
+          - 0.53 -> 4.96
+          - 0.76 -> 1.01
+          - 0.91 -> 0.37
+          - 1.00 -> 0.00
 
 #########
 # Power #
@@ -547,40 +636,38 @@ sensor:
 
   # Input
   - platform: adc
-    name: "Input Voltage"
-    id: input_voltage
     pin: GPIO36
-    attenuation: 12dB
-    accuracy_decimals: 3
+    id: input_voltage
+    name: "Input Voltage"
+    internal: true
+    attenuation: auto
+    accuracy_decimals: $accuracy
     filters:
       - multiply: $divider
     unit_of_measurement: "V"
     update_interval: $sensors_update
-    icon: mdi:lightning-bolt
 
   # Battery
   - platform: adc
-    name: "Battery Voltage"
     id: battery_voltage
+    name: "Battery Voltage"
     pin: GPIO39
-    attenuation: 12dB
-    accuracy_decimals: 3
+    internal: true
+    attenuation: auto
     filters:
       - multiply: $divider
-    unit_of_measurement: "V"
     update_interval: $sensors_update
-    icon: mdi:lightning-bolt
     on_value:
       then:
         - component.update: battery_percentage
 
   - platform: template
-    name: "Battery"
     id: battery_percentage
-    lambda: return id(battery_voltage).state;
+    name: "Battery"
+    icon: mdi:battery
     accuracy_decimals: 0
     unit_of_measurement: "%"
-    icon: mdi:battery
+    lambda: return id(battery_voltage).state;
     filters:
       - calibrate_linear:
          method: exact
