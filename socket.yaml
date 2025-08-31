@@ -7,6 +7,7 @@ substitutions:
   name: socket
   # ! Limits !
   current_limit: "10"
+  temperature_limit: "65"
 
 esphome:
   name: $name
@@ -25,7 +26,6 @@ packages:
   connection: !include common/connection.yaml
   # Extras
   extras: !include common/extras.yaml
-  extras-32: !include common/extras-32.yaml
 
 ###########
 # Sensors #
@@ -107,10 +107,22 @@ sensor:
             - homeassistant.service:
                 service: notify.notify
                 data:
-                  message: "Overcurrent"
+                  message: "High Current"
     voltage:
       name: "Voltage"
     power:
       name: "Power"
     energy:
       name: "Energy"
+
+  # Internal Temperature
+  - platform: internal_temperature
+    name: Internal Temperature
+    on_value_range:
+      - above: ${temperature_limit}
+        then:
+          - switch.turn_off: relay
+          - homeassistant.service:
+              service: notify.notify
+              data:
+                message: "Internal Temperature"
