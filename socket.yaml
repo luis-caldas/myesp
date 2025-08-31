@@ -118,6 +118,7 @@ sensor:
   # Internal Temperature
   - platform: internal_temperature
     name: Internal Temperature
+    update_interval: ${sensors_update}
     on_value_range:
       - above: ${temperature_limit}
         then:

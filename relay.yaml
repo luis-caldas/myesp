@@ -127,20 +127,6 @@ sensor:
       filters:
         - throttle_average: ${sensors_update}
 
-    # Other Powers
-    apparent_power:
-      name: "Apparent Power"
-      filters:
-        - throttle_average: ${sensors_update}
-    reactive_power:
-      name: "Reactive Power"
-      filters:
-        - throttle_average: ${sensors_update}
-    power_factor:
-      name: "Power Factor"
-      filters:
-        - throttle_average: ${sensors_update}
-
     # Energy
     energy:
       name: "Energy"
@@ -175,6 +161,7 @@ sensor:
   # Internal Temperature
   - platform: internal_temperature
     name: Internal Temperature
+    update_interval: ${sensors_update}
     on_value_range:
       - above: ${temperature_limit}
         then:
