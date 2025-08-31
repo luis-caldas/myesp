@@ -15,9 +15,9 @@ substitutions:
   charger_voltage_cut: "4"
   # Sensors
   co_load: "10000.0"
-  co_fresh: "100000.0"
+  co_fresh: "110000.0"
   smoke_load: "4700.0"
-  smoke_fresh: "60000.0"
+  smoke_fresh: "65000.0"
   # Limits
   smoke_limit: "30"
   co2_limit: "2000"
